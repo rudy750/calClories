@@ -53,15 +53,16 @@ const DEFAULT_DRAFT: Draft = {
 function Radio<T extends string>({ label, value, selected, onChange }: {
   label: string; value: T; selected: T; onChange: (v: T) => void;
 }) {
+  const isSelected = selected === value;
   return (
     <button
       type="button"
       onClick={() => onChange(value)}
-      className={`w-full text-left px-4 py-3 rounded-xl border-2 font-medium transition-colors ${
-        selected === value
-          ? 'border-brand-500 bg-brand-50 text-brand-700'
-          : 'border-gray-200 bg-white text-gray-700'
-      }`}
+      className="w-full text-left px-4 py-3.5 rounded-2xl font-semibold transition-all"
+      style={isSelected
+        ? { background: '#f5f3ff', border: '2px solid #8b5cf6', color: '#7c3aed' }
+        : { background: '#ffffff', border: '2px solid #ede9fe', color: '#6b5fa6' }
+      }
     >
       {label}
     </button>
@@ -73,7 +74,7 @@ function NumInput({ label, value, onChange, unit, placeholder }: {
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-semibold mb-1.5" style={{ color: '#6b5fa6' }}>{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="number"
@@ -81,9 +82,10 @@ function NumInput({ label, value, onChange, unit, placeholder }: {
           value={value}
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="flex-1 px-4 py-3.5 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+          style={{ background: '#ffffff', border: '1.5px solid #ede9fe', color: '#1c1040' }}
         />
-        {unit && <span className="text-sm text-gray-500 w-8">{unit}</span>}
+        {unit && <span className="text-sm font-semibold w-8" style={{ color: '#a89fd4' }}>{unit}</span>}
       </div>
     </div>
   );
@@ -153,20 +155,19 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col max-w-lg mx-auto">
+    <div className="min-h-screen flex flex-col max-w-lg mx-auto" style={{ background: '#fdfaf5' }}>
       {/* Header */}
-      <div className="px-4 pt-10 pb-4">
-        <div className="text-xs font-semibold text-brand-600 uppercase tracking-widest mb-1">
+      <div className="px-5 pt-12 pb-5">
+        <div className="text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: '#a78bfa' }}>
           Step {stepIdx + 1} of {STEPS.length}
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">{STEP_LABELS[step]}</h1>
-        <div className="flex gap-1 mt-3">
+        <h1 className="text-2xl font-bold" style={{ color: '#1c1040', letterSpacing: '-0.02em' }}>{STEP_LABELS[step]}</h1>
+        <div className="flex gap-1.5 mt-4">
           {STEPS.map((s, i) => (
             <div
               key={s}
-              className={`flex-1 h-1 rounded-full transition-colors ${
-                i <= stepIdx ? 'bg-brand-500' : 'bg-gray-200'
-              }`}
+              className="flex-1 h-1.5 rounded-full transition-all"
+              style={i <= stepIdx ? { background: 'linear-gradient(90deg, #a78bfa, #7c3aed)' } : { background: '#ede9fe' }}
             />
           ))}
         </div>
@@ -177,13 +178,14 @@ export default function OnboardingPage() {
         {step === 'basics' && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block text-sm font-semibold mb-1.5" style={{ color: '#6b5fa6' }}>Name</label>
               <input
                 type="text"
                 value={draft.name}
                 onChange={e => set('name', e.target.value)}
                 placeholder="Your name"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full px-4 py-3.5 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+                style={{ background: '#ffffff', border: '1.5px solid #ede9fe', color: '#1c1040' }}
               />
             </div>
             <div className="flex gap-3">
@@ -191,19 +193,19 @@ export default function OnboardingPage() {
                 <Radio key={s} label={s === 'male' ? 'Male' : 'Female'} value={s} selected={draft.sex} onChange={v => set('sex', v)} />
               ))}
             </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-3">
-              <div className="text-sm font-medium text-gray-700 mb-2">Measurement system</div>
+            <div className="rounded-2xl p-4" style={{ background: '#ffffff', border: '1.5px solid #ede9fe' }}>
+              <div className="text-sm font-semibold mb-3" style={{ color: '#6b5fa6' }}>Measurement system</div>
               <div className="grid grid-cols-2 gap-2">
                 {(['metric', 'imperial'] as UnitSystem[]).map(system => (
                   <button
                     key={system}
                     type="button"
                     onClick={() => set('unitSystem', system)}
-                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-colors ${
-                      draft.unitSystem === system
-                        ? 'border-brand-500 bg-brand-50 text-brand-700'
-                        : 'border-gray-200 bg-white text-gray-700'
-                    }`}
+                    className="rounded-xl px-3 py-2.5 text-sm font-bold transition-all"
+                    style={draft.unitSystem === system
+                      ? { background: 'linear-gradient(135deg, #a78bfa, #7c3aed)', color: '#ffffff' }
+                      : { background: '#fdfaf5', border: '1.5px solid #ede9fe', color: '#6b5fa6' }
+                    }
                   >
                     {system === 'metric' ? 'Metric (kg / cm)' : 'Imperial (lb / in)'}
                   </button>
@@ -246,14 +248,14 @@ export default function OnboardingPage() {
                 key={val}
                 type="button"
                 onClick={() => set('activityLevel', val)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors ${
-                  draft.activityLevel === val
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-200 bg-white'
-                }`}
+                className="w-full text-left px-4 py-3.5 rounded-2xl transition-all"
+                style={draft.activityLevel === val
+                  ? { background: '#f5f3ff', border: '2px solid #8b5cf6' }
+                  : { background: '#ffffff', border: '2px solid #ede9fe' }
+                }
               >
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-xs text-gray-500">{sub}</div>
+                <div className="font-bold text-sm" style={{ color: draft.activityLevel === val ? '#7c3aed' : '#1c1040' }}>{label}</div>
+                <div className="text-xs mt-0.5" style={{ color: '#a89fd4' }}>{sub}</div>
               </button>
             ))}
           </div>
@@ -302,14 +304,14 @@ export default function OnboardingPage() {
                 key={val}
                 type="button"
                 onClick={() => set('macroPreset', val)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors ${
-                  draft.macroPreset === val
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-200 bg-white'
-                }`}
+                className="w-full text-left px-4 py-3.5 rounded-2xl transition-all"
+                style={draft.macroPreset === val
+                  ? { background: '#f5f3ff', border: '2px solid #8b5cf6' }
+                  : { background: '#ffffff', border: '2px solid #ede9fe' }
+                }
               >
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-xs text-gray-500">{sub}</div>
+                <div className="font-bold text-sm" style={{ color: draft.macroPreset === val ? '#7c3aed' : '#1c1040' }}>{label}</div>
+                <div className="text-xs mt-0.5" style={{ color: '#a89fd4' }}>{sub}</div>
               </button>
             ))}
           </div>
@@ -317,12 +319,13 @@ export default function OnboardingPage() {
       </div>
 
       {/* Navigation */}
-      <div className="px-4 pb-8 pt-4 flex gap-3">
+      <div className="px-5 pb-10 pt-4 flex gap-3">
         {!isFirst && (
           <button
             type="button"
             onClick={back}
-            className="flex items-center gap-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium"
+            className="flex items-center gap-1 px-5 py-3.5 rounded-2xl font-semibold transition-all"
+            style={{ background: '#ffffff', border: '1.5px solid #ede9fe', color: '#7c3aed' }}
           >
             <ChevronLeft size={18} /> Back
           </button>
@@ -331,7 +334,8 @@ export default function OnboardingPage() {
           type="button"
           onClick={next}
           disabled={!canAdvance() || saving}
-          className="flex-1 flex items-center justify-center gap-1 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold disabled:opacity-40 transition-opacity"
+          className="flex-1 flex items-center justify-center gap-1 px-4 py-3.5 rounded-2xl text-white font-bold disabled:opacity-40 transition-all"
+          style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)', boxShadow: '0 4px 20px rgba(124,58,237,0.3)' }}
         >
           {isLast ? (
             saving ? 'Saving…' : <><Check size={18} /> Get started</>

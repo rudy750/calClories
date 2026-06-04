@@ -8,7 +8,10 @@
     touch-action: manipulation;
   }
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background-color: #fdfaf5;
+    color: #1c1040;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin: 0;
     overscroll-behavior-y: contain;
   }
@@ -25,5 +28,13 @@
   }
   .safe-top {
     padding-top: env(safe-area-inset-top, 0px);
+  }
+  .pill-btn {
+    @apply rounded-full px-6 py-3 font-semibold transition-all;
+  }
+  .wellness-card {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
   }
 }

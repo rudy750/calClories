@@ -9,24 +9,24 @@ interface Props {
   targetFatG: number;
 }
 
-function Ring({ value, max, color, size = 80 }: {
-  value: number; max: number; color: string; size?: number;
+function Ring({ value, max, color, trackColor, size = 88 }: {
+  value: number; max: number; color: string; trackColor: string; size?: number;
 }) {
-  const radius = (size - 8) / 2;
+  const radius = (size - 10) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min(value / Math.max(max, 1), 1.05);
   const offset = circumference * (1 - progress);
 
   return (
     <svg width={size} height={size} className="rotate-[-90deg]">
-      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#f3f4f6" strokeWidth={8} />
+      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={trackColor} strokeWidth={10} />
       <circle
         cx={size / 2} cy={size / 2} r={radius} fill="none"
-        stroke={color} strokeWidth={8}
+        stroke={color} strokeWidth={10}
         strokeDasharray={circumference}
         strokeDashoffset={offset}
         strokeLinecap="round"
-        className="transition-all duration-500"
+        className="transition-all duration-700"
       />
     </svg>
   );
@@ -38,12 +38,15 @@ function MacroBar({ label, value, target, color }: {
   const pct = Math.min((value / Math.max(target, 1)) * 100, 100);
   return (
     <div className="flex-1">
-      <div className="flex justify-between text-xs mb-1">
-        <span className="font-medium text-gray-600">{label}</span>
-        <span className="text-gray-400">{value.toFixed(0)}/{target}g</span>
+      <div className="flex justify-between text-xs mb-2">
+        <span className="font-semibold" style={{ color: '#6b5fa6' }}>{label}</span>
+        <span style={{ color: '#a89fd4' }}>{value.toFixed(0)}g</span>
       </div>
-      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundColor: color }} />
+      <div className="h-2 rounded-full overflow-hidden" style={{ background: '#f0ebff' }}>
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${pct}%`, background: color }}
+        />
       </div>
     </div>
   );
@@ -52,28 +55,38 @@ function MacroBar({ label, value, target, color }: {
 export default function MacroSummary({ calories, targetCalories, proteinG, targetProteinG, carbG, targetCarbG, fatG, targetFatG }: Props) {
   const remaining = targetCalories - calories;
   const overBudget = remaining < 0;
+  const pct = Math.round(Math.min((calories / Math.max(targetCalories, 1)) * 100, 100));
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mt-4">
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <Ring value={calories} max={targetCalories} color={overBudget ? '#ef4444' : '#22c55e'} size={88} />
+    <div className="mt-4 p-5 rounded-3xl" style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #fdfaf5 100%)', border: '1px solid rgba(139,92,246,0.12)', boxShadow: '0 2px 20px rgba(139,92,246,0.08)' }}>
+      <div className="flex items-center gap-5">
+        <div className="relative shrink-0">
+          <Ring
+            value={calories}
+            max={targetCalories}
+            color={overBudget ? '#f43f5e' : '#8b5cf6'}
+            trackColor="#ede9fe"
+            size={92}
+          />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-lg font-bold text-gray-900 leading-none">{calories}</span>
-            <span className="text-[10px] text-gray-400">kcal</span>
+            <span className="text-xl font-bold leading-none" style={{ color: '#1c1040' }}>{calories}</span>
+            <span className="text-[9px] font-medium mt-0.5" style={{ color: '#a89fd4' }}>kcal</span>
           </div>
         </div>
-        <div className="flex-1">
-          <div className={`text-sm font-semibold ${overBudget ? 'text-red-500' : 'text-gray-700'}`}>
-            {overBudget ? `${Math.abs(remaining)} over` : `${remaining} remaining`}
+        <div className="flex-1 min-w-0">
+          <div className={`text-base font-bold mb-0.5 ${overBudget ? 'text-rose-500' : ''}`} style={overBudget ? {} : { color: '#7c3aed' }}>
+            {overBudget ? `${Math.abs(remaining)} kcal over` : `${remaining} kcal left`}
           </div>
-          <div className="text-xs text-gray-400">Goal: {targetCalories} kcal</div>
+          <div className="text-xs mb-3" style={{ color: '#a89fd4' }}>Goal · {targetCalories} kcal</div>
+          <div className="h-2 rounded-full overflow-hidden" style={{ background: '#ede9fe' }}>
+            <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: overBudget ? '#f43f5e' : 'linear-gradient(90deg, #a78bfa, #7c3aed)' }} />
+          </div>
         </div>
       </div>
-      <div className="flex gap-4 mt-4">
-        <MacroBar label="Protein" value={proteinG} target={targetProteinG} color="#3b82f6" />
+      <div className="flex gap-4 mt-5">
+        <MacroBar label="Protein" value={proteinG} target={targetProteinG} color="#6366f1" />
         <MacroBar label="Carbs" value={carbG} target={targetCarbG} color="#f59e0b" />
-        <MacroBar label="Fat" value={fatG} target={targetFatG} color="#f97316" />
+        <MacroBar label="Fat" value={fatG} target={targetFatG} color="#ec4899" />
       </div>
     </div>
   );

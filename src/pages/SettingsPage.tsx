@@ -9,7 +9,7 @@ import { fromDisplayHeight, fromDisplayPace, fromDisplayWeight, toDisplayHeight,
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{label}</label>
+      <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: '#a89fd4' }}>{label}</label>
       {children}
     </div>
   );
@@ -25,7 +25,8 @@ function TextInput({ value, onChange, type = 'text', placeholder }: {
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+      className="w-full px-4 py-3 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+      style={{ background: '#fdfaf5', border: '1.5px solid #ede9fe', color: '#1c1040' }}
     />
   );
 }
@@ -38,7 +39,8 @@ function SelectInput({ value, onChange, options }: {
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+      className="w-full px-4 py-3 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+      style={{ background: '#fdfaf5', border: '1.5px solid #ede9fe', color: '#1c1040' }}
     >
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
@@ -90,20 +92,19 @@ export default function SettingsPage() {
 
   return (
     <AppShell title="Settings">
-      <div className="flex flex-col gap-5 mt-4 pb-6">
+      <div className="flex flex-col gap-4 mt-4 pb-6">
         <Section title="Display units">
           <Field label="Measurement system">
-            <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-gray-50 p-1">
+            <div className="grid grid-cols-2 gap-2 rounded-2xl p-1.5" style={{ background: '#fdfaf5', border: '1.5px solid #ede9fe' }}>
               {(['metric', 'imperial'] as UnitSystem[]).map(system => (
                 <button
                   key={system}
                   type="button"
                   onClick={() => set('unitSystem', system)}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
-                    unitSystem === system
-                      ? 'bg-brand-600 text-white shadow-sm'
-                      : 'text-gray-600 hover:bg-white'
+                  className={`rounded-xl px-3 py-2.5 text-sm font-bold transition-all ${
+                    unitSystem === system ? 'text-white' : 'text-gray-400'
                   }`}
+                  style={unitSystem === system ? { background: 'linear-gradient(135deg, #a78bfa, #7c3aed)' } : {}}
                 >
                   {system === 'metric' ? 'Metric' : 'Imperial'}
                 </button>
@@ -226,7 +227,8 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3.5 rounded-xl bg-brand-600 text-white font-semibold text-base"
+          className="w-full py-4 rounded-2xl text-white font-bold text-base transition-all"
+          style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)', boxShadow: '0 4px 20px rgba(124,58,237,0.3)' }}
         >
           {saved ? '✓ Saved!' : 'Save changes'}
         </button>
@@ -234,7 +236,8 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={() => { if (confirm('Reset all data?')) { indexedDB.deleteDatabase('CaloriesDB'); location.reload(); } }}
-          className="w-full py-3 rounded-xl border border-red-200 text-red-500 text-sm font-medium"
+          className="w-full py-3 rounded-2xl text-sm font-semibold transition-colors"
+          style={{ border: '1.5px solid #fecdd3', color: '#fb7185' }}
         >
           Reset all data
         </button>
@@ -245,8 +248,8 @@ export default function SettingsPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-      <h3 className="font-semibold text-gray-800 mb-4">{title}</h3>
+    <div className="rounded-3xl p-5" style={{ background: '#ffffff', boxShadow: '0 1px 8px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)', border: '1px solid rgba(139,92,246,0.08)' }}>
+      <h3 className="font-bold mb-4 text-sm" style={{ color: '#1c1040' }}>{title}</h3>
       <div className="flex flex-col gap-3">{children}</div>
     </div>
   );
