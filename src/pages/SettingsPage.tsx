@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { getProfile, saveProfile, saveTarget } from '../db/database';
 import { buildInitialTarget } from '../domain/macroEngine';
-import type { UserProfile, ActivityLevel, GoalType, MacroPreset, Sex } from '../types';
+import type { UserProfile, ActivityLevel, GoalType, MacroPreset, Sex, UnitSystem } from '../types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fromDisplayHeight, fromDisplayPace, fromDisplayWeight, toDisplayHeight, toDisplayPace, toDisplayWeight } from '../utils/units';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -51,6 +52,8 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [form, setForm] = useState<Partial<UserProfile>>({});
 
+  const unitSystem = (form.unitSystem ?? profile?.unitSystem ?? 'metric') as UnitSystem;
+
   useEffect(() => {
     if (profile) setForm(profile);
   }, [profile]);
@@ -61,9 +64,11 @@ export default function SettingsPage() {
 
   async function handleSave() {
     if (!profile) return;
+
     const updated: UserProfile = {
       ...profile,
       ...form,
+      unitSystem,
       updatedAt: new Date().toISOString(),
     };
     await saveProfile(updated);
@@ -86,6 +91,27 @@ export default function SettingsPage() {
   return (
     <AppShell title="Settings">
       <div className="flex flex-col gap-5 mt-4 pb-6">
+        <Section title="Display units">
+          <Field label="Measurement system">
+            <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-gray-50 p-1">
+              {(['metric', 'imperial'] as UnitSystem[]).map(system => (
+                <button
+                  key={system}
+                  type="button"
+                  onClick={() => set('unitSystem', system)}
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+                    unitSystem === system
+                      ? 'bg-brand-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:bg-white'
+                  }`}
+                >
+                  {system === 'metric' ? 'Metric' : 'Imperial'}
+                </button>
+              ))}
+            </div>
+          </Field>
+        </Section>
+
         {/* Personal */}
         <Section title="Personal">
           <Field label="Name">
@@ -101,11 +127,19 @@ export default function SettingsPage() {
           <Field label="Age (years)">
             <TextInput type="number" value={String(form.age ?? '')} onChange={v => set('age', Number(v))} />
           </Field>
-          <Field label="Height (cm)">
-            <TextInput type="number" value={String(form.heightCm ?? '')} onChange={v => set('heightCm', Number(v))} />
+          <Field label={`Height (${unitSystem === 'metric' ? 'cm' : 'in'})`}>
+            <TextInput
+              type="number"
+              value={String(toDisplayHeight(Number(form.heightCm ?? 0), unitSystem) ?? '')}
+              onChange={v => set('heightCm', fromDisplayHeight(Number(v || 0), unitSystem))}
+            />
           </Field>
-          <Field label="Weight (kg)">
-            <TextInput type="number" value={String(form.weightKg ?? '')} onChange={v => set('weightKg', Number(v))} />
+          <Field label={`Weight (${unitSystem === 'metric' ? 'kg' : 'lb'})`}>
+            <TextInput
+              type="number"
+              value={String(toDisplayWeight(Number(form.weightKg ?? 0), unitSystem) ?? '')}
+              onChange={v => set('weightKg', fromDisplayWeight(Number(v || 0), unitSystem))}
+            />
           </Field>
         </Section>
 
@@ -136,16 +170,29 @@ export default function SettingsPage() {
             />
           </Field>
           {form.goalType !== 'maintain' && (
-            <Field label="Pace (kg/week)">
+            <Field label={`Pace (${unitSystem === 'metric' ? 'kg/week' : 'lb/week'})`}>
               <SelectInput
-                value={String(form.goalPaceKgPerWeek ?? 0.5)}
-                onChange={v => set('goalPaceKgPerWeek', Number(v))}
-                options={[
-                  { value: '0.25', label: '0.25 kg/week (slow)' },
-                  { value: '0.5', label: '0.5 kg/week' },
-                  { value: '0.75', label: '0.75 kg/week' },
-                  { value: '1.0', label: '1.0 kg/week (aggressive)' },
-                ]}
+                value={
+                  unitSystem === 'metric'
+                    ? String(toDisplayPace(Number(form.goalPaceKgPerWeek ?? 0.5), unitSystem))
+                    : toDisplayPace(Number(form.goalPaceKgPerWeek ?? 0.5), unitSystem).toFixed(2)
+                }
+                onChange={v => set('goalPaceKgPerWeek', fromDisplayPace(Number(v || 0), unitSystem))}
+                options={
+                  unitSystem === 'metric'
+                    ? [
+                        { value: '0.25', label: '0.25 kg/week (slow)' },
+                        { value: '0.5', label: '0.5 kg/week' },
+                        { value: '0.75', label: '0.75 kg/week' },
+                        { value: '1.0', label: '1.0 kg/week (aggressive)' },
+                      ]
+                    : [
+                        { value: '0.55', label: '0.55 lb/week (slow)' },
+                        { value: '1.10', label: '1.10 lb/week' },
+                        { value: '1.65', label: '1.65 lb/week' },
+                        { value: '2.20', label: '2.20 lb/week (aggressive)' },
+                      ]
+                }
               />
             </Field>
           )}

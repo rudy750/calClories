@@ -2,6 +2,7 @@ export type Sex = 'male' | 'female';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'very_active' | 'extra_active';
 export type GoalType = 'lose' | 'maintain' | 'gain';
 export type MacroPreset = 'balanced' | 'high_protein' | 'low_carb' | 'custom';
+export type UnitSystem = 'metric' | 'imperial';
 
 export interface UserProfile {
   id: 1; // singleton
@@ -13,6 +14,7 @@ export interface UserProfile {
   activityLevel: ActivityLevel;
   goalType: GoalType;
   goalPaceKgPerWeek: number; // 0.25 | 0.5 | 0.75 | 1.0
+  unitSystem: UnitSystem;
   macroPreset: MacroPreset;
   customProteinPct?: number;
   customCarbPct?: number;

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { UserProfile, Sex, ActivityLevel, GoalType, MacroPreset } from '../types';
+import type { UserProfile, Sex, ActivityLevel, GoalType, MacroPreset, UnitSystem } from '../types';
 import { saveProfile } from '../db/database';
 import { buildInitialTarget } from '../domain/macroEngine';
 import { saveTarget } from '../db/database';
+import { fromDisplayHeight, fromDisplayWeight } from '../utils/units';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 
 const STEPS = ['basics', 'body', 'activity', 'goal', 'macros'] as const;
@@ -20,6 +21,7 @@ const STEP_LABELS: Record<Step, string> = {
 interface Draft {
   name: string;
   sex: Sex;
+  unitSystem: UnitSystem;
   age: string;
   heightCm: string;
   weightKg: string;
@@ -35,6 +37,7 @@ interface Draft {
 const DEFAULT_DRAFT: Draft = {
   name: '',
   sex: 'male',
+  unitSystem: 'metric',
   age: '',
   heightCm: '',
   weightKg: '',
@@ -122,15 +125,18 @@ export default function OnboardingPage() {
   async function handleFinish() {
     setSaving(true);
     const now = new Date().toISOString();
+    const heightInCm = fromDisplayHeight(Number(draft.heightCm), draft.unitSystem);
+    const weightInKg = fromDisplayWeight(Number(draft.weightKg), draft.unitSystem);
     const profile: Omit<UserProfile, 'id'> = {
       name: draft.name.trim(),
       sex: draft.sex,
       age: Number(draft.age),
-      heightCm: Number(draft.heightCm),
-      weightKg: Number(draft.weightKg),
+      heightCm: heightInCm,
+      weightKg: weightInKg,
       activityLevel: draft.activityLevel,
       goalType: draft.goalType,
       goalPaceKgPerWeek: Number(draft.goalPaceKgPerWeek),
+      unitSystem: draft.unitSystem,
       macroPreset: draft.macroPreset,
       customProteinPct: Number(draft.customProteinPct),
       customCarbPct: Number(draft.customCarbPct),
@@ -185,14 +191,45 @@ export default function OnboardingPage() {
                 <Radio key={s} label={s === 'male' ? 'Male' : 'Female'} value={s} selected={draft.sex} onChange={v => set('sex', v)} />
               ))}
             </div>
+            <div className="rounded-2xl border border-gray-200 bg-white p-3">
+              <div className="text-sm font-medium text-gray-700 mb-2">Measurement system</div>
+              <div className="grid grid-cols-2 gap-2">
+                {(['metric', 'imperial'] as UnitSystem[]).map(system => (
+                  <button
+                    key={system}
+                    type="button"
+                    onClick={() => set('unitSystem', system)}
+                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-colors ${
+                      draft.unitSystem === system
+                        ? 'border-brand-500 bg-brand-50 text-brand-700'
+                        : 'border-gray-200 bg-white text-gray-700'
+                    }`}
+                  >
+                    {system === 'metric' ? 'Metric (kg / cm)' : 'Imperial (lb / in)'}
+                  </button>
+                ))}
+              </div>
+            </div>
           </>
         )}
 
         {step === 'body' && (
           <>
             <NumInput label="Age" value={draft.age} onChange={v => set('age', v)} unit="yrs" placeholder="25" />
-            <NumInput label="Height" value={draft.heightCm} onChange={v => set('heightCm', v)} unit="cm" placeholder="170" />
-            <NumInput label="Current weight" value={draft.weightKg} onChange={v => set('weightKg', v)} unit="kg" placeholder="75" />
+            <NumInput
+              label="Height"
+              value={draft.heightCm}
+              onChange={v => set('heightCm', v)}
+              unit={draft.unitSystem === 'metric' ? 'cm' : 'in'}
+              placeholder={draft.unitSystem === 'metric' ? '170' : '71'}
+            />
+            <NumInput
+              label="Current weight"
+              value={draft.weightKg}
+              onChange={v => set('weightKg', v)}
+              unit={draft.unitSystem === 'metric' ? 'kg' : 'lb'}
+              placeholder={draft.unitSystem === 'metric' ? '75' : '165'}
+            />
           </>
         )}
 
