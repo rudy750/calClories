@@ -261,7 +261,7 @@ export default function OnboardingPage() {
             </div>
             {draft.goalType !== 'maintain' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="app-muted mb-2 block text-sm font-semibold">
                   Weekly {draft.goalType === 'lose' ? 'loss' : 'gain'} pace
                 </label>
                 <div className="flex flex-col gap-2">

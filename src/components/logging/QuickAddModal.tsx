@@ -32,36 +32,38 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40">
-      <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-2xl p-6 pb-8">
+      <div className="app-card w-full max-w-lg rounded-t-3xl p-6 pb-8 sm:rounded-2xl">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <Zap size={18} className="text-brand-600" />
-            <h2 className="text-lg font-bold text-gray-900">Quick Add</h2>
+            <div className="app-icon-pill flex h-8 w-8 items-center justify-center">
+              <Zap size={16} />
+            </div>
+            <h2 className="text-lg font-bold">Quick Add</h2>
           </div>
-          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+          <button type="button" onClick={onClose} className="app-subtle p-1">
             <X size={20} />
           </button>
         </div>
 
         <div className="flex flex-col gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Label (optional)</label>
+            <label className="app-subtle mb-1 block text-xs font-medium uppercase tracking-wide">Label (optional)</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="app-input w-full px-4 py-3"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Calories *</label>
+            <label className="app-subtle mb-1 block text-xs font-medium uppercase tracking-wide">Calories *</label>
             <input
               type="number"
               inputMode="numeric"
               value={calories}
               onChange={e => setCalories(e.target.value)}
               placeholder="500"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="app-input w-full px-4 py-3 text-xl font-semibold"
               autoFocus
             />
           </div>
@@ -72,14 +74,14 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
               { label: 'Fat', val: fat, set: setFat },
             ].map(({ label, val, set }) => (
               <div key={label}>
-                <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">{label} g</label>
+                <label className="app-subtle mb-1 block text-xs font-medium uppercase tracking-wide">{label} g</label>
                 <input
                   type="number"
                   inputMode="decimal"
                   value={val}
                   onChange={e => set(e.target.value)}
                   placeholder="0"
-                  className="w-full px-3 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="app-input w-full px-3 py-3"
                 />
               </div>
             ))}
@@ -90,7 +92,7 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
           type="button"
           onClick={handleSave}
           disabled={!calories}
-          className="w-full mt-5 py-3.5 rounded-xl bg-brand-600 text-white font-semibold text-base disabled:opacity-40"
+          className="app-primary-button mt-5 w-full rounded-[var(--app-control-radius)] py-3.5 text-base font-semibold disabled:opacity-40"
         >
           Add {calories ? `${calories} kcal` : ''}
         </button>
