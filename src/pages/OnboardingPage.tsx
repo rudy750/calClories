@@ -125,14 +125,14 @@ export default function OnboardingPage() {
   async function handleFinish() {
     setSaving(true);
     const now = new Date().toISOString();
-    const heightCm = fromDisplayHeight(Number(draft.heightCm), draft.unitSystem);
-    const weightKg = fromDisplayWeight(Number(draft.weightKg), draft.unitSystem);
+    const heightInCm = fromDisplayHeight(Number(draft.heightCm), draft.unitSystem);
+    const weightInKg = fromDisplayWeight(Number(draft.weightKg), draft.unitSystem);
     const profile: Omit<UserProfile, 'id'> = {
       name: draft.name.trim(),
       sex: draft.sex,
       age: Number(draft.age),
-      heightCm,
-      weightKg,
+      heightCm: heightInCm,
+      weightKg: weightInKg,
       activityLevel: draft.activityLevel,
       goalType: draft.goalType,
       goalPaceKgPerWeek: Number(draft.goalPaceKgPerWeek),
