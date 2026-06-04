@@ -172,7 +172,11 @@ export default function SettingsPage() {
           {form.goalType !== 'maintain' && (
             <Field label={`Pace (${unitSystem === 'metric' ? 'kg/week' : 'lb/week'})`}>
               <SelectInput
-                value={String(toDisplayPace(Number(form.goalPaceKgPerWeek ?? 0.5), unitSystem))}
+                value={
+                  unitSystem === 'metric'
+                    ? String(toDisplayPace(Number(form.goalPaceKgPerWeek ?? 0.5), unitSystem))
+                    : toDisplayPace(Number(form.goalPaceKgPerWeek ?? 0.5), unitSystem).toFixed(2)
+                }
                 onChange={v => set('goalPaceKgPerWeek', fromDisplayPace(Number(v || 0), unitSystem))}
                 options={
                   unitSystem === 'metric'
@@ -183,10 +187,10 @@ export default function SettingsPage() {
                         { value: '1.0', label: '1.0 kg/week (aggressive)' },
                       ]
                     : [
-                        { value: '0.55', label: '0.5 lb/week (slow)' },
-                        { value: '1.10', label: '1.0 lb/week' },
-                        { value: '1.65', label: '1.5 lb/week' },
-                        { value: '2.20', label: '2.0 lb/week (aggressive)' },
+                        { value: '0.55', label: '0.55 lb/week (slow)' },
+                        { value: '1.10', label: '1.10 lb/week' },
+                        { value: '1.65', label: '1.65 lb/week' },
+                        { value: '2.20', label: '2.20 lb/week (aggressive)' },
                       ]
                 }
               />

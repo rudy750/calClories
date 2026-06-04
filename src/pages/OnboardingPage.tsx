@@ -4,6 +4,7 @@ import type { UserProfile, Sex, ActivityLevel, GoalType, MacroPreset, UnitSystem
 import { saveProfile } from '../db/database';
 import { buildInitialTarget } from '../domain/macroEngine';
 import { saveTarget } from '../db/database';
+import { fromDisplayHeight, fromDisplayWeight } from '../utils/units';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 
 const STEPS = ['basics', 'body', 'activity', 'goal', 'macros'] as const;
@@ -124,12 +125,14 @@ export default function OnboardingPage() {
   async function handleFinish() {
     setSaving(true);
     const now = new Date().toISOString();
+    const heightCm = fromDisplayHeight(Number(draft.heightCm), draft.unitSystem);
+    const weightKg = fromDisplayWeight(Number(draft.weightKg), draft.unitSystem);
     const profile: Omit<UserProfile, 'id'> = {
       name: draft.name.trim(),
       sex: draft.sex,
       age: Number(draft.age),
-      heightCm: Number(draft.heightCm),
-      weightKg: Number(draft.weightKg),
+      heightCm,
+      weightKg,
       activityLevel: draft.activityLevel,
       goalType: draft.goalType,
       goalPaceKgPerWeek: Number(draft.goalPaceKgPerWeek),
