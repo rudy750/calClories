@@ -31,14 +31,14 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40">
-      <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-2xl p-6 pb-8">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60">
+      <div className="w-full max-w-lg rounded-t-3xl sm:rounded-2xl p-6 pb-8 text-white" style={{ background: '#0F1525', border: '1px solid #1F2D50' }}>
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <Zap size={18} className="text-brand-600" />
-            <h2 className="text-lg font-bold text-gray-900">Quick Add</h2>
+            <Zap size={18} className="text-brand-500 drop-shadow-[0_0_8px_rgba(0,217,126,0.5)]" />
+            <h2 className="text-lg font-bold text-white">Quick Add</h2>
           </div>
-          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+          <button type="button" onClick={onClose} className="text-gray-500 hover:text-white p-1 transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -50,7 +50,8 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+              style={{ background: '#141D30', border: '1px solid #1F2D50' }}
             />
           </div>
           <div>
@@ -61,7 +62,8 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
               value={calories}
               onChange={e => setCalories(e.target.value)}
               placeholder="500"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full px-4 py-3 rounded-xl text-white text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500"
+              style={{ background: '#141D30', border: '1px solid #1F2D50' }}
               autoFocus
             />
           </div>
@@ -79,7 +81,8 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
                   value={val}
                   onChange={e => set(e.target.value)}
                   placeholder="0"
-                  className="w-full px-3 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full px-3 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  style={{ background: '#141D30', border: '1px solid #1F2D50' }}
                 />
               </div>
             ))}
@@ -90,7 +93,8 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
           type="button"
           onClick={handleSave}
           disabled={!calories}
-          className="w-full mt-5 py-3.5 rounded-xl bg-brand-600 text-white font-semibold text-base disabled:opacity-40"
+          className="w-full mt-5 py-3.5 rounded-xl text-white font-semibold text-base disabled:opacity-40 transition-all"
+          style={{ background: '#00B368', boxShadow: '0 0 20px rgba(0,217,126,0.3)' }}
         >
           Add {calories ? `${calories} kcal` : ''}
         </button>

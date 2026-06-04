@@ -8,7 +8,10 @@
     touch-action: manipulation;
   }
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background-color: #080B14;
+    color: #F0F4FF;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin: 0;
     overscroll-behavior-y: contain;
   }
@@ -25,5 +28,15 @@
   }
   .safe-top {
     padding-top: env(safe-area-inset-top, 0px);
+  }
+  .glass-card {
+    background: rgba(15, 21, 37, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(31, 45, 80, 0.8);
+  }
+  .neon-text {
+    color: #00D97E;
+    text-shadow: 0 0 10px rgba(0, 217, 126, 0.5);
   }
 }

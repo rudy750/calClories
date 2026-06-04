@@ -60,7 +60,8 @@ export default function BarcodeScanner({ onDetected, onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          className="w-full py-3 rounded-xl bg-white/10 text-white font-medium border border-white/20"
+          className="w-full py-3 rounded-xl text-white font-medium"
+          style={{ background: '#0F1525', border: '1px solid #1F2D50' }}
         >
           Cancel
         </button>

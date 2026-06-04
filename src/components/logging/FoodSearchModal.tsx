@@ -91,58 +91,58 @@ export default function FoodSearchModal({ slot, onSave, onClose, onQuickAdd }: P
   const showRecents = !query && recents.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-white">
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-4 pb-2 border-b border-gray-100">
-        <button type="button" onClick={onClose} className="text-gray-400 p-1"><X size={22} /></button>
+    <div className="fixed inset-0 z-50 flex flex-col bg-dark-900 text-white">
+      <div className="flex items-center gap-3 px-4 pt-4 pb-2" style={{ borderBottom: '1px solid #1F2D50' }}>
+        <button type="button" onClick={onClose} className="text-gray-500 hover:text-white p-1 transition-colors"><X size={22} /></button>
         <div className="flex-1 relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
             value={query}
             onChange={e => handleInput(e.target.value)}
             placeholder="Search foods…"
             autoFocus
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-gray-100 text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl text-white text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+            style={{ background: '#141D30', border: '1px solid #1F2D50' }}
           />
-          {searching && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 animate-spin" />}
+          {searching && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 animate-spin" />}
         </div>
         <button
           type="button"
           onClick={() => setShowScanner(true)}
-          className="p-2 text-brand-600 hover:bg-brand-50 rounded-xl transition-colors"
+          className="p-2 text-brand-500 rounded-xl transition-colors hover:bg-white/5"
+          style={{ boxShadow: '0 0 10px rgba(0,217,126,0.15)' }}
         >
           <Camera size={22} />
         </button>
       </div>
 
-      {/* Quick add shortcut */}
       <div className="px-4 pt-3">
         <button
           type="button"
           onClick={onQuickAdd}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed border-gray-200 text-brand-600 font-medium text-sm hover:bg-brand-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed text-brand-500 font-medium text-sm hover:bg-white/5 transition-colors"
+          style={{ borderColor: '#1F2D50' }}
         >
           ⚡ Quick add calories
         </button>
       </div>
 
       {barcodeError && (
-        <div className="mx-4 mt-3 p-3 bg-red-50 text-red-700 rounded-xl text-sm">{barcodeError}</div>
+        <div className="mx-4 mt-3 p-3 rounded-xl text-sm text-red-300" style={{ background: 'rgba(127,29,29,0.35)', border: '1px solid rgba(248,113,113,0.25)' }}>{barcodeError}</div>
       )}
 
       {barcodeLookingUp && (
-        <div className="flex items-center justify-center gap-2 mt-8 text-gray-500">
+        <div className="flex items-center justify-center gap-2 mt-8 text-gray-400">
           <Loader2 size={20} className="animate-spin" />
           Looking up barcode…
         </div>
       )}
 
-      {/* Results / Recents */}
       <div className="flex-1 overflow-y-auto">
         {showRecents && (
           <div className="px-4 pt-4">
-            <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-widest">
               <History size={13} /> Recent
             </div>
             {recents.map(food => (
@@ -158,12 +158,11 @@ export default function FoodSearchModal({ slot, onSave, onClose, onQuickAdd }: P
         )}
 
         {query.length >= 2 && !searching && results.length === 0 && (
-          <div className="text-center mt-12 text-gray-400 text-sm">No results for "{query}"</div>
+          <div className="text-center mt-12 text-gray-500 text-sm">No results for "{query}"</div>
         )}
       </div>
 
-      {/* Attribution */}
-      <div className="px-4 py-3 text-center text-[10px] text-gray-300">
+      <div className="px-4 py-3 text-center text-[10px] text-gray-600">
         Data from Open Food Facts (CC BY-SA) &amp; USDA FoodData Central
       </div>
     </div>
@@ -175,15 +174,16 @@ function FoodRow({ result, onSelect }: { result: NutritionSearchResult; onSelect
     <button
       type="button"
       onClick={() => onSelect(result)}
-      className="w-full flex items-center justify-between py-3 border-b border-gray-50 last:border-0 text-left hover:bg-gray-50 rounded-lg px-2 -mx-2 transition-colors"
+      className="w-full flex items-center justify-between py-3 text-left rounded-lg px-2 -mx-2 transition-colors hover:bg-white/5"
+      style={{ borderBottom: '1px solid #141D30' }}
     >
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-gray-900 truncate">{result.name}</div>
-        {result.brand && <div className="text-xs text-gray-400 truncate">{result.brand}</div>}
+        <div className="text-sm font-medium text-gray-100 truncate">{result.name}</div>
+        {result.brand && <div className="text-xs text-gray-500 truncate">{result.brand}</div>}
       </div>
       <div className="text-right ml-3 shrink-0">
-        <div className="text-sm font-semibold text-gray-700">{Math.round(result.calories)} kcal</div>
-        <div className="text-[10px] text-gray-400">per 100g</div>
+        <div className="text-sm font-semibold text-gray-300">{Math.round(result.calories)} kcal</div>
+        <div className="text-[10px] text-gray-500">per 100g</div>
       </div>
     </button>
   );
