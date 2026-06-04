@@ -80,7 +80,7 @@ export async function getRecentFoods(limit = 20): Promise<FoodItem[]> {
 export async function bumpFoodUsage(id: number): Promise<void> {
   await db.foods.update(id, {
     lastUsed: new Date().toISOString(),
-    useCount: (await db.foods.get(id))?.useCount ?? 0 + 1,
+    useCount: ((await db.foods.get(id))?.useCount ?? 0) + 1,
   });
 }
 

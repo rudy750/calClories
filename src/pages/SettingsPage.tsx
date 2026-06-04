@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { getProfile, saveProfile, saveTarget } from '../db/database';
 import { buildInitialTarget } from '../domain/macroEngine';
@@ -50,16 +50,13 @@ export default function SettingsPage() {
 
   const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
   const [saved, setSaved] = useState(false);
-  const [form, setForm] = useState<Partial<UserProfile>>({});
+  const [formOverrides, setFormOverrides] = useState<Partial<UserProfile>>({});
+  const form: Partial<UserProfile> = profile ? { ...profile, ...formOverrides } : formOverrides;
 
   const unitSystem = (form.unitSystem ?? profile?.unitSystem ?? 'metric') as UnitSystem;
 
-  useEffect(() => {
-    if (profile) setForm(profile);
-  }, [profile]);
-
   function set<K extends keyof UserProfile>(key: K, value: UserProfile[K]) {
-    setForm(f => ({ ...f, [key]: value }));
+    setFormOverrides(f => ({ ...f, [key]: value }));
   }
 
   async function handleSave() {
