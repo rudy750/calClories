@@ -57,3 +57,13 @@ Current MVP scope includes:
 - npm run build: create production build
 - npm run preview: preview production build locally
 - npm run lint: run lint checks
+
+## GitHub Pages
+
+This project is configured to deploy to GitHub Pages from GitHub Actions.
+
+- Workflow: .github/workflows/deploy-pages.yml
+- Deploy trigger: push to main
+- Expected live URL: https://rudy750.github.io/calClories/
+
+If this is the first deployment, make sure Pages is enabled in repository settings and the source is set to GitHub Actions.

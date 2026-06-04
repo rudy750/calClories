@@ -2,7 +2,7 @@ import { useState } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { getWeighIns, addWeighIn, getMealsInRange, getLatestTarget } from '../db/database';
 import { daysAgo, format } from '../utils/date';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Scale, TrendingUp } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { estimateTDEE } from '../domain/adaptiveEngine';
@@ -108,7 +108,10 @@ export default function ProgressPage() {
               />
               <Tooltip
                 contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                formatter={(v: number) => [`${v} kg`, 'Weight']}
+                formatter={(value) => {
+                  const numeric = typeof value === 'number' ? value : Number(value ?? 0);
+                  return [`${Number.isFinite(numeric) ? numeric : 0} kg`, 'Weight'];
+                }}
               />
               <Line type="monotone" dataKey="weight" stroke="#22c55e" strokeWidth={2} dot={false} />
             </LineChart>

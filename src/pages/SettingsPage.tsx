@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import AppShell from '../components/layout/AppShell';
-import { getProfile, saveProfile, getLatestTarget, saveTarget } from '../db/database';
+import { getProfile, saveProfile, saveTarget } from '../db/database';
 import { buildInitialTarget } from '../domain/macroEngine';
 import type { UserProfile, ActivityLevel, GoalType, MacroPreset, Sex } from '../types';
-import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronRight } from 'lucide-react';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -47,7 +45,6 @@ function SelectInput({ value, onChange, options }: {
 }
 
 export default function SettingsPage() {
-  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
