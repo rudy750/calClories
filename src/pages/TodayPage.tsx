@@ -82,9 +82,10 @@ export default function TodayPage() {
       <button
         type="button"
         onClick={() => { setActiveSlot('snack'); setShowSearch(true); }}
-        className="fixed bottom-24 right-4 w-14 h-14 rounded-full bg-brand-600 text-white shadow-lg flex items-center justify-center hover:bg-brand-700 transition-colors z-30"
+        className="fixed bottom-24 right-4 w-14 h-14 rounded-full text-white flex items-center justify-center z-30 transition-transform active:scale-95"
+        style={{ background: '#f97316', border: '2.5px solid #0f172a', boxShadow: '3px 3px 0px #0f172a' }}
       >
-        <Plus size={26} />
+        <Plus size={26} strokeWidth={3} />
       </button>
 
       {showSearch && (

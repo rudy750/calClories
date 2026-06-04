@@ -68,95 +68,103 @@ export default function ProgressPage() {
   return (
     <AppShell title="Progress">
       {/* Log weight */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mt-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Scale size={18} className="text-brand-600" />
-          <span className="font-semibold text-gray-800">Log weight</span>
+      <div className="rounded-xl mt-4 bg-white overflow-hidden" style={{ border: '2px solid #0f172a', boxShadow: '3px 3px 0px #0f172a' }}>
+        <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: '1.5px solid #f1f5f9', background: '#f8f9fa' }}>
+          <Scale size={16} style={{ color: '#f97316' }} />
+          <span className="font-black text-sm uppercase tracking-wide" style={{ color: '#0f172a' }}>Log weight</span>
         </div>
-        <div className="flex gap-2">
-          <input
-            type="number"
-            inputMode="decimal"
-            value={newWeight}
-            onChange={e => setNewWeight(e.target.value)}
-            placeholder={unitSystem === 'metric' ? '75.0' : '165.0'}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
-          />
-          <span className="flex items-center text-gray-500 text-sm">{unitSystem === 'metric' ? 'kg' : 'lb'}</span>
-          <button
-            type="button"
-            onClick={logWeight}
-            disabled={!newWeight}
-            className="px-5 py-2.5 rounded-xl bg-brand-600 text-white font-semibold disabled:opacity-40"
-          >
-            Log
-          </button>
-        </div>
-        {latestWeight != null && (
-          <div className="mt-2 text-sm text-gray-500">
-            Latest: <strong>{latestDisplay?.toFixed(1)} {unitSystem === 'metric' ? 'kg' : 'lb'}</strong>
-            {change !== null && (
-              <span className={`ml-2 font-medium ${Number(change) < 0 ? 'text-green-600' : Number(change) > 0 ? 'text-red-500' : 'text-gray-400'}`}>
-                ({Number(change) > 0 ? '+' : ''}{change} {unitSystem === 'metric' ? 'kg' : 'lb'} from start)
-              </span>
-            )}
+        <div className="p-4">
+          <div className="flex gap-2">
+            <input
+              type="number"
+              inputMode="decimal"
+              value={newWeight}
+              onChange={e => setNewWeight(e.target.value)}
+              placeholder={unitSystem === 'metric' ? '75.0' : '165.0'}
+              className="flex-1 px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold rounded-lg"
+              style={{ background: '#f8f9fa', border: '2px solid #0f172a', color: '#0f172a' }}
+            />
+            <span className="flex items-center text-sm font-black px-1" style={{ color: '#94a3b8' }}>{unitSystem === 'metric' ? 'kg' : 'lb'}</span>
+            <button
+              type="button"
+              onClick={logWeight}
+              disabled={!newWeight}
+              className="px-5 py-2.5 rounded-lg text-white font-black disabled:opacity-40 transition-all"
+              style={{ background: '#f97316', border: '2px solid #0f172a', boxShadow: '2px 2px 0px #0f172a' }}
+            >
+              Log
+            </button>
           </div>
-        )}
+          {latestWeight != null && (
+            <div className="mt-2 text-sm font-semibold" style={{ color: '#64748b' }}>
+              Latest: <strong style={{ color: '#0f172a' }}>{latestDisplay?.toFixed(1)} {unitSystem === 'metric' ? 'kg' : 'lb'}</strong>
+              {change !== null && (
+                <span className={`ml-2 font-bold ${Number(change) < 0 ? 'text-teal-600' : Number(change) > 0 ? 'text-red-500' : ''}`}>
+                  ({Number(change) > 0 ? '+' : ''}{change} {unitSystem === 'metric' ? 'kg' : 'lb'})
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Weight chart */}
       {chartData.length >= 2 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mt-4">
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp size={18} className="text-brand-600" />
-            <span className="font-semibold text-gray-800">Weight trend (last 30 entries)</span>
+        <div className="rounded-xl mt-4 bg-white overflow-hidden" style={{ border: '2px solid #0f172a', boxShadow: '3px 3px 0px #0f172a' }}>
+          <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: '1.5px solid #f1f5f9', background: '#f8f9fa' }}>
+            <TrendingUp size={16} style={{ color: '#f97316' }} />
+            <span className="font-black text-sm uppercase tracking-wide" style={{ color: '#0f172a' }}>Weight trend</span>
           </div>
-          <ResponsiveContainer width="100%" height={180}>
-            <LineChart data={chartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-              <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} />
-              <YAxis
-                domain={['auto', 'auto']}
-                tick={{ fontSize: 10, fill: '#9ca3af' }}
-                tickLine={false}
-              />
-              <Tooltip
-                contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                formatter={(value) => {
-                  const numeric = typeof value === 'number' ? value : Number(value ?? 0);
-                  return [`${Number.isFinite(numeric) ? numeric : 0} ${unitSystem === 'metric' ? 'kg' : 'lb'}`, 'Weight'];
-                }}
-              />
-              <Line type="monotone" dataKey="weight" stroke="#22c55e" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="p-4">
+            <ResponsiveContainer width="100%" height={180}>
+              <LineChart data={chartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} tickLine={false} />
+                <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} tickLine={false} />
+                <Tooltip
+                  contentStyle={{ borderRadius: 8, border: '2px solid #0f172a', boxShadow: '3px 3px 0px #0f172a', background: '#fff', color: '#0f172a', fontWeight: 700 }}
+                  formatter={(value) => {
+                    const numeric = typeof value === 'number' ? value : Number(value ?? 0);
+                    return [`${Number.isFinite(numeric) ? numeric : 0} ${unitSystem === 'metric' ? 'kg' : 'lb'}`, 'Weight'];
+                  }}
+                />
+                <Line type="monotone" dataKey="weight" stroke="#f97316" strokeWidth={3} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
 
       {/* Adaptive target info */}
       {target && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mt-4">
-          <div className="font-semibold text-gray-800 mb-3">Current targets</div>
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard label="Calories" value={`${target.calories} kcal`} />
-            <StatCard label="TDEE estimate" value={estimatedTDEE ? `${estimatedTDEE} kcal` : (target.tdeeEstimate ? `${target.tdeeEstimate} kcal` : '—')} />
-            <StatCard label="Protein" value={`${target.proteinG}g`} />
-            <StatCard label="Carbs" value={`${target.carbG}g`} />
-            <StatCard label="Fat" value={`${target.fatG}g`} />
-            <StatCard label="Source" value={target.source === 'adaptive' ? 'Adaptive' : 'Initial'} />
+        <div className="rounded-xl mt-4 bg-white overflow-hidden" style={{ border: '2px solid #0f172a', boxShadow: '3px 3px 0px #0f172a' }}>
+          <div className="px-4 py-3" style={{ borderBottom: '1.5px solid #f1f5f9', background: '#f8f9fa' }}>
+            <span className="font-black text-sm uppercase tracking-wide" style={{ color: '#0f172a' }}>Current targets</span>
           </div>
-          {weighIns.length < 7 && (
-            <p className="text-xs text-gray-400 mt-3">
-              Log your weight for 7+ days to enable adaptive calorie adjustments.
-            </p>
-          )}
+          <div className="p-4">
+            <div className="grid grid-cols-2 gap-2.5">
+              <StatCard label="Calories" value={`${target.calories} kcal`} />
+              <StatCard label="TDEE estimate" value={estimatedTDEE ? `${estimatedTDEE} kcal` : (target.tdeeEstimate ? `${target.tdeeEstimate} kcal` : '—')} />
+              <StatCard label="Protein" value={`${target.proteinG}g`} />
+              <StatCard label="Carbs" value={`${target.carbG}g`} />
+              <StatCard label="Fat" value={`${target.fatG}g`} />
+              <StatCard label="Source" value={target.source === 'adaptive' ? 'Adaptive' : 'Initial'} />
+            </div>
+            {weighIns.length < 7 && (
+              <p className="text-xs font-semibold mt-3" style={{ color: '#94a3b8' }}>
+                Log your weight for 7+ days to enable adaptive calorie adjustments.
+              </p>
+            )}
+          </div>
         </div>
       )}
 
       {weighIns.length === 0 && (
-        <div className="text-center mt-12 text-gray-400">
-          <Scale size={40} className="mx-auto mb-3 opacity-30" />
-          <p className="text-sm">Log your weight daily to track progress and enable adaptive targets.</p>
+        <div className="text-center mt-12">
+          <div className="w-14 h-14 rounded-xl mx-auto mb-4 flex items-center justify-center" style={{ background: '#fff7ed', border: '2px solid #0f172a' }}>
+            <Scale size={26} style={{ color: '#f97316' }} />
+          </div>
+          <p className="text-sm font-semibold" style={{ color: '#64748b' }}>Log your weight daily to track progress and enable adaptive targets.</p>
         </div>
       )}
     </AppShell>
@@ -165,9 +173,9 @@ export default function ProgressPage() {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gray-50 rounded-xl p-3">
-      <div className="text-xs text-gray-400 mb-0.5">{label}</div>
-      <div className="text-base font-semibold text-gray-800">{value}</div>
+    <div className="rounded-lg p-3" style={{ background: '#f8f9fa', border: '1.5px solid #e2e8f0' }}>
+      <div className="text-xs font-black uppercase tracking-wide mb-1" style={{ color: '#94a3b8' }}>{label}</div>
+      <div className="text-sm font-black" style={{ color: '#0f172a' }}>{value}</div>
     </div>
   );
 }

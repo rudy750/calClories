@@ -53,15 +53,16 @@ const DEFAULT_DRAFT: Draft = {
 function Radio<T extends string>({ label, value, selected, onChange }: {
   label: string; value: T; selected: T; onChange: (v: T) => void;
 }) {
+  const isSelected = selected === value;
   return (
     <button
       type="button"
       onClick={() => onChange(value)}
-      className={`w-full text-left px-4 py-3 rounded-xl border-2 font-medium transition-colors ${
-        selected === value
-          ? 'border-brand-500 bg-brand-50 text-brand-700'
-          : 'border-gray-200 bg-white text-gray-700'
-      }`}
+      className="w-full text-left px-4 py-3 rounded-lg font-bold transition-all"
+      style={isSelected
+        ? { background: '#fff7ed', border: '2px solid #f97316', color: '#ea580c', boxShadow: '2px 2px 0px #0f172a' }
+        : { background: '#ffffff', border: '2px solid #e2e8f0', color: '#64748b' }
+      }
     >
       {label}
     </button>
@@ -73,7 +74,7 @@ function NumInput({ label, value, onChange, unit, placeholder }: {
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-xs font-black uppercase tracking-wider mb-1.5" style={{ color: '#64748b' }}>{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="number"
@@ -81,9 +82,10 @@ function NumInput({ label, value, onChange, unit, placeholder }: {
           value={value}
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="flex-1 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold rounded-lg"
+          style={{ background: '#ffffff', border: '2px solid #0f172a', color: '#0f172a' }}
         />
-        {unit && <span className="text-sm text-gray-500 w-8">{unit}</span>}
+        {unit && <span className="text-sm font-black w-8" style={{ color: '#94a3b8' }}>{unit}</span>}
       </div>
     </div>
   );
@@ -153,20 +155,19 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col max-w-lg mx-auto">
+    <div className="min-h-screen flex flex-col max-w-lg mx-auto" style={{ background: '#f8f9fa' }}>
       {/* Header */}
-      <div className="px-4 pt-10 pb-4">
-        <div className="text-xs font-semibold text-brand-600 uppercase tracking-widest mb-1">
+      <div className="px-4 pt-12 pb-5">
+        <div className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: '#f97316' }}>
           Step {stepIdx + 1} of {STEPS.length}
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">{STEP_LABELS[step]}</h1>
-        <div className="flex gap-1 mt-3">
+        <h1 className="text-3xl font-black" style={{ color: '#0f172a', letterSpacing: '-0.04em' }}>{STEP_LABELS[step]}</h1>
+        <div className="flex gap-1.5 mt-4">
           {STEPS.map((s, i) => (
             <div
               key={s}
-              className={`flex-1 h-1 rounded-full transition-colors ${
-                i <= stepIdx ? 'bg-brand-500' : 'bg-gray-200'
-              }`}
+              className="flex-1 h-2 rounded-sm transition-all"
+              style={i <= stepIdx ? { background: '#f97316' } : { background: '#e2e8f0' }}
             />
           ))}
         </div>
@@ -177,13 +178,14 @@ export default function OnboardingPage() {
         {step === 'basics' && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5" style={{ color: '#64748b' }}>Name</label>
               <input
                 type="text"
                 value={draft.name}
                 onChange={e => set('name', e.target.value)}
                 placeholder="Your name"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold rounded-lg"
+                style={{ background: '#ffffff', border: '2px solid #0f172a', color: '#0f172a' }}
               />
             </div>
             <div className="flex gap-3">
@@ -191,21 +193,21 @@ export default function OnboardingPage() {
                 <Radio key={s} label={s === 'male' ? 'Male' : 'Female'} value={s} selected={draft.sex} onChange={v => set('sex', v)} />
               ))}
             </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-3">
-              <div className="text-sm font-medium text-gray-700 mb-2">Measurement system</div>
+            <div className="rounded-lg p-4" style={{ background: '#ffffff', border: '2px solid #0f172a' }}>
+              <div className="text-xs font-black uppercase tracking-wider mb-3" style={{ color: '#64748b' }}>Measurement system</div>
               <div className="grid grid-cols-2 gap-2">
                 {(['metric', 'imperial'] as UnitSystem[]).map(system => (
                   <button
                     key={system}
                     type="button"
                     onClick={() => set('unitSystem', system)}
-                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-colors ${
-                      draft.unitSystem === system
-                        ? 'border-brand-500 bg-brand-50 text-brand-700'
-                        : 'border-gray-200 bg-white text-gray-700'
-                    }`}
+                    className="rounded-lg px-3 py-2.5 text-sm font-black uppercase tracking-wide transition-all"
+                    style={draft.unitSystem === system
+                      ? { background: '#f97316', color: '#ffffff', border: '2px solid #0f172a', boxShadow: '2px 2px 0px #0f172a' }
+                      : { background: '#f8f9fa', border: '2px solid #e2e8f0', color: '#64748b' }
+                    }
                   >
-                    {system === 'metric' ? 'Metric (kg / cm)' : 'Imperial (lb / in)'}
+                    {system === 'metric' ? 'Metric' : 'Imperial'}
                   </button>
                 ))}
               </div>
@@ -246,14 +248,14 @@ export default function OnboardingPage() {
                 key={val}
                 type="button"
                 onClick={() => set('activityLevel', val)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors ${
-                  draft.activityLevel === val
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-200 bg-white'
-                }`}
+                className="w-full text-left px-4 py-3 rounded-lg transition-all"
+                style={draft.activityLevel === val
+                  ? { background: '#fff7ed', border: '2px solid #f97316', boxShadow: '2px 2px 0px #0f172a' }
+                  : { background: '#ffffff', border: '2px solid #e2e8f0' }
+                }
               >
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-xs text-gray-500">{sub}</div>
+                <div className="font-black text-sm" style={{ color: draft.activityLevel === val ? '#ea580c' : '#0f172a' }}>{label}</div>
+                <div className="text-xs font-semibold mt-0.5" style={{ color: '#94a3b8' }}>{sub}</div>
               </button>
             ))}
           </div>
@@ -302,14 +304,14 @@ export default function OnboardingPage() {
                 key={val}
                 type="button"
                 onClick={() => set('macroPreset', val)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors ${
-                  draft.macroPreset === val
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-200 bg-white'
-                }`}
+                className="w-full text-left px-4 py-3 rounded-lg transition-all"
+                style={draft.macroPreset === val
+                  ? { background: '#fff7ed', border: '2px solid #f97316', boxShadow: '2px 2px 0px #0f172a' }
+                  : { background: '#ffffff', border: '2px solid #e2e8f0' }
+                }
               >
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-xs text-gray-500">{sub}</div>
+                <div className="font-black text-sm" style={{ color: draft.macroPreset === val ? '#ea580c' : '#0f172a' }}>{label}</div>
+                <div className="text-xs font-semibold mt-0.5" style={{ color: '#94a3b8' }}>{sub}</div>
               </button>
             ))}
           </div>
@@ -317,26 +319,28 @@ export default function OnboardingPage() {
       </div>
 
       {/* Navigation */}
-      <div className="px-4 pb-8 pt-4 flex gap-3">
+      <div className="px-4 pb-10 pt-4 flex gap-3">
         {!isFirst && (
           <button
             type="button"
             onClick={back}
-            className="flex items-center gap-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium"
+            className="flex items-center gap-1 px-4 py-3 rounded-lg font-black uppercase tracking-wide text-sm"
+            style={{ background: '#ffffff', border: '2px solid #0f172a', color: '#0f172a', boxShadow: '2px 2px 0px #0f172a' }}
           >
-            <ChevronLeft size={18} /> Back
+            <ChevronLeft size={18} strokeWidth={3} /> Back
           </button>
         )}
         <button
           type="button"
           onClick={next}
           disabled={!canAdvance() || saving}
-          className="flex-1 flex items-center justify-center gap-1 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold disabled:opacity-40 transition-opacity"
+          className="flex-1 flex items-center justify-center gap-1 px-4 py-3 rounded-lg text-white font-black uppercase tracking-wide text-sm disabled:opacity-40 transition-all"
+          style={{ background: '#f97316', border: '2px solid #0f172a', boxShadow: '3px 3px 0px #0f172a' }}
         >
           {isLast ? (
-            saving ? 'Saving…' : <><Check size={18} /> Get started</>
+            saving ? 'Saving…' : <><Check size={18} strokeWidth={3} /> Get started</>
           ) : (
-            <>Next <ChevronRight size={18} /></>
+            <>Next <ChevronRight size={18} strokeWidth={3} /></>
           )}
         </button>
       </div>

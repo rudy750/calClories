@@ -8,11 +8,12 @@ interface Props {
 
 export default function AppShell({ title, children }: Props) {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 max-w-lg mx-auto">
+    <div className="flex flex-col min-h-screen max-w-lg mx-auto" style={{ background: '#f8f9fa' }}>
       {title && (
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 safe-top">
-          <div className="px-4 py-3">
-            <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
+        <header className="sticky top-0 z-30 bg-white safe-top" style={{ borderBottom: '2px solid #0f172a' }}>
+          <div className="px-4 py-3.5 flex items-center gap-3">
+            <div className="w-1 h-6 rounded-full" style={{ background: '#f97316' }} />
+            <h1 className="text-lg font-black tracking-tight" style={{ color: '#0f172a', letterSpacing: '-0.03em' }}>{title}</h1>
           </div>
         </header>
       )}

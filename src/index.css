@@ -8,7 +8,10 @@
     touch-action: manipulation;
   }
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background-color: #f8f9fa;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin: 0;
     overscroll-behavior-y: contain;
   }
@@ -25,5 +28,10 @@
   }
   .safe-top {
     padding-top: env(safe-area-inset-top, 0px);
+  }
+  .energy-card {
+    background: #ffffff;
+    border-radius: 0.875rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.05);
   }
 }
