@@ -3,7 +3,7 @@ import AppShell from '../components/layout/AppShell';
 import { getWeighIns, addWeighIn, getMealsInRange, getLatestTarget, getProfile } from '../db/database';
 import { daysAgo, format } from '../utils/date';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Scale, TrendingUp } from 'lucide-react';
+import { Scale, Target, TrendingUp } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { estimateTDEE } from '../domain/adaptiveEngine';
 import type { CalorieTarget } from '../types';
@@ -112,7 +112,7 @@ export default function ProgressPage() {
       </SectionCard>
 
       {chartData.length >= 2 && (
-        <SectionCard icon={TrendingUp} title="Weight trend">
+        <SectionCard icon={TrendingUp} title="Weight trend (last 30 entries)">
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={chartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--app-chart-grid)" />
@@ -138,7 +138,7 @@ export default function ProgressPage() {
       )}
 
       {target && (
-        <SectionCard icon={TrendingUp} title="Current targets">
+        <SectionCard icon={Target} title="Current targets">
           <div className="grid grid-cols-2 gap-3">
             <StatCard label="Calories" value={`${target.calories} kcal`} />
             <StatCard label="TDEE estimate" value={estimatedTDEE ? `${estimatedTDEE} kcal` : (target.tdeeEstimate ? `${target.tdeeEstimate} kcal` : '—')} />
