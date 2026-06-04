@@ -6,6 +6,7 @@ import { buildInitialTarget } from '../domain/macroEngine';
 import { saveTarget } from '../db/database';
 import { fromDisplayHeight, fromDisplayWeight } from '../utils/units';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { DEFAULT_THEME } from '../theme/themes';
 
 const STEPS = ['basics', 'body', 'activity', 'goal', 'macros'] as const;
 type Step = typeof STEPS[number];
@@ -57,11 +58,7 @@ function Radio<T extends string>({ label, value, selected, onChange }: {
     <button
       type="button"
       onClick={() => onChange(value)}
-      className={`w-full text-left px-4 py-3 rounded-xl border-2 font-medium transition-colors ${
-        selected === value
-          ? 'border-brand-500 bg-brand-50 text-brand-700'
-          : 'border-gray-200 bg-white text-gray-700'
-      }`}
+      className={`app-option w-full px-4 py-3 text-left font-semibold ${selected === value ? 'app-option-active' : ''}`}
     >
       {label}
     </button>
@@ -73,7 +70,7 @@ function NumInput({ label, value, onChange, unit, placeholder }: {
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="app-muted mb-1 block text-sm font-semibold">{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="number"
@@ -81,9 +78,9 @@ function NumInput({ label, value, onChange, unit, placeholder }: {
           value={value}
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="app-input flex-1 px-4 py-3 text-base"
         />
-        {unit && <span className="text-sm text-gray-500 w-8">{unit}</span>}
+        {unit && <span className="app-subtle w-8 text-sm font-semibold">{unit}</span>}
       </div>
     </div>
   );
@@ -141,6 +138,7 @@ export default function OnboardingPage() {
       customProteinPct: Number(draft.customProteinPct),
       customCarbPct: Number(draft.customCarbPct),
       customFatPct: Number(draft.customFatPct),
+      theme: DEFAULT_THEME,
       onboardingComplete: true,
       createdAt: now,
       updatedAt: now,
@@ -153,20 +151,19 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col max-w-lg mx-auto">
+    <div className="app-screen min-h-screen flex max-w-lg flex-col mx-auto">
       {/* Header */}
       <div className="px-4 pt-10 pb-4">
-        <div className="text-xs font-semibold text-brand-600 uppercase tracking-widest mb-1">
+        <div className="mb-1 text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--app-brand-strong)' }}>
           Step {stepIdx + 1} of {STEPS.length}
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">{STEP_LABELS[step]}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{STEP_LABELS[step]}</h1>
         <div className="flex gap-1 mt-3">
           {STEPS.map((s, i) => (
             <div
               key={s}
-              className={`flex-1 h-1 rounded-full transition-colors ${
-                i <= stepIdx ? 'bg-brand-500' : 'bg-gray-200'
-              }`}
+              className="flex-1 h-1 rounded-full transition-colors"
+              style={{ background: i <= stepIdx ? 'var(--app-brand)' : 'var(--app-ring-track)' }}
             />
           ))}
         </div>
@@ -177,13 +174,13 @@ export default function OnboardingPage() {
         {step === 'basics' && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="app-muted mb-1 block text-sm font-semibold">Name</label>
               <input
                 type="text"
                 value={draft.name}
                 onChange={e => set('name', e.target.value)}
                 placeholder="Your name"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="app-input w-full px-4 py-3 text-base"
               />
             </div>
             <div className="flex gap-3">
@@ -191,19 +188,15 @@ export default function OnboardingPage() {
                 <Radio key={s} label={s === 'male' ? 'Male' : 'Female'} value={s} selected={draft.sex} onChange={v => set('sex', v)} />
               ))}
             </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-3">
-              <div className="text-sm font-medium text-gray-700 mb-2">Measurement system</div>
+            <div className="app-card p-3">
+              <div className="app-muted mb-2 text-sm font-semibold">Measurement system</div>
               <div className="grid grid-cols-2 gap-2">
                 {(['metric', 'imperial'] as UnitSystem[]).map(system => (
                   <button
                     key={system}
                     type="button"
                     onClick={() => set('unitSystem', system)}
-                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-colors ${
-                      draft.unitSystem === system
-                        ? 'border-brand-500 bg-brand-50 text-brand-700'
-                        : 'border-gray-200 bg-white text-gray-700'
-                    }`}
+                    className={`app-option px-3 py-2 text-sm font-semibold ${draft.unitSystem === system ? 'app-option-active' : ''}`}
                   >
                     {system === 'metric' ? 'Metric (kg / cm)' : 'Imperial (lb / in)'}
                   </button>
@@ -246,14 +239,10 @@ export default function OnboardingPage() {
                 key={val}
                 type="button"
                 onClick={() => set('activityLevel', val)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors ${
-                  draft.activityLevel === val
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-200 bg-white'
-                }`}
+                className={`app-option w-full px-4 py-3 text-left ${draft.activityLevel === val ? 'app-option-active' : ''}`}
               >
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-xs text-gray-500">{sub}</div>
+                <div className="font-medium">{label}</div>
+                <div className="app-subtle text-xs">{sub}</div>
               </button>
             ))}
           </div>
@@ -302,14 +291,10 @@ export default function OnboardingPage() {
                 key={val}
                 type="button"
                 onClick={() => set('macroPreset', val)}
-                className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-colors ${
-                  draft.macroPreset === val
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-gray-200 bg-white'
-                }`}
+                className={`app-option w-full px-4 py-3 text-left ${draft.macroPreset === val ? 'app-option-active' : ''}`}
               >
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-xs text-gray-500">{sub}</div>
+                <div className="font-medium">{label}</div>
+                <div className="app-subtle text-xs">{sub}</div>
               </button>
             ))}
           </div>
@@ -322,7 +307,7 @@ export default function OnboardingPage() {
           <button
             type="button"
             onClick={back}
-            className="flex items-center gap-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium"
+            className="app-secondary-button flex items-center gap-1 px-4 py-3 rounded-[var(--app-control-radius)] font-medium"
           >
             <ChevronLeft size={18} /> Back
           </button>
@@ -331,7 +316,7 @@ export default function OnboardingPage() {
           type="button"
           onClick={next}
           disabled={!canAdvance() || saving}
-          className="flex-1 flex items-center justify-center gap-1 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold disabled:opacity-40 transition-opacity"
+          className="app-primary-button flex-1 flex items-center justify-center gap-1 px-4 py-3 rounded-[var(--app-control-radius)] font-semibold disabled:opacity-40 transition-opacity"
         >
           {isLast ? (
             saving ? 'Saving…' : <><Check size={18} /> Get started</>
