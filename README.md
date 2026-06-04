@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# calClories
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+calClories is a nutrition tracking app focused on daily consistency over complexity. It helps users set a personalized calorie and macro target, log meals quickly, and track weight trends to support fat loss, maintenance, or gain goals.
 
-Currently, two official plugins are available:
+## Purpose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The purpose of this project is to provide a lightweight, fast, mobile-first food logging experience that reduces friction compared to traditional calorie trackers.
 
-## React Compiler
+## Goals
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Make logging meals fast enough to use every day.
+- Generate a practical calorie and macro target from onboarding data.
+- Track progress with daily totals, trends, and simple visual feedback.
+- Keep data local-first and privacy-friendly for early iterations.
+- Create a strong product foundation for future integrations and coaching features.
 
-## Expanding the ESLint configuration
+## MVP Note
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+This project is currently an MVP (Minimum Viable Product).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Current MVP scope includes:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Onboarding flow for profile, activity, goal, and macro preset setup.
+- Daily meal logging with search and quick add.
+- Calorie and macro progress summary for the current day.
+- Weight logging and trend visualization.
+- Basic adaptive target estimation logic.
+- Local persistence using IndexedDB.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- React
+- TypeScript
+- Vite
+- TanStack Query
+- Dexie (IndexedDB)
+- Tailwind CSS
+- Recharts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Run Locally
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Install dependencies:
+
+   npm install
+
+2. Start the development server:
+
+   npm run dev
+
+3. Open the app in your browser:
+
+   http://localhost:5173
+
+## Scripts
+
+- npm run dev: start local dev server
+- npm run build: create production build
+- npm run preview: preview production build locally
+- npm run lint: run lint checks
