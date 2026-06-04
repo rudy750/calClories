@@ -95,7 +95,6 @@ export default function MealList({ meals, onDelete, onAddToSlot }: Props) {
             <button
               type="button"
               onClick={() => onAddToSlot(slot)}
-              aria-label="+ Add food"
               className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold transition-colors"
               style={{ color: 'var(--app-brand-strong)' }}
             >

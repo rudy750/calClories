@@ -52,7 +52,7 @@ export default function ProgressPage() {
   }
 
   const chartData = weighIns.slice(-30).map(w => ({
-    date: w.date.slice(5),
+    date: w.date.slice(5), // MM-DD
     weight: toDisplayWeight(w.weightKg, unitSystem),
   }));
 
@@ -104,7 +104,7 @@ export default function ProgressPage() {
                         : 'var(--app-subtle)',
                 }}
               >
-                ({Number(change) > 0 ? '+' : ''}{change} {unitSystem === 'metric' ? 'kg' : 'lb'})
+                ({Number(change) > 0 ? '+' : ''}{change} {unitSystem === 'metric' ? 'kg' : 'lb'} from start)
               </span>
             )}
           </div>
