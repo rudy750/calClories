@@ -131,6 +131,7 @@ export default function OnboardingPage() {
       activityLevel: draft.activityLevel,
       goalType: draft.goalType,
       goalPaceKgPerWeek: Number(draft.goalPaceKgPerWeek),
+      unitSystem: 'metric',
       macroPreset: draft.macroPreset,
       customProteinPct: Number(draft.customProteinPct),
       customCarbPct: Number(draft.customCarbPct),
