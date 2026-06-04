@@ -1,16 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getProfile } from '../db/database';
 import type { DesignTheme } from '../types';
 import { resolveThemeName } from '../theme/themes';
-
-interface ThemeContextValue {
-  themeName: DesignTheme;
-  previewTheme: DesignTheme | null;
-  setPreviewTheme: (theme: DesignTheme | null) => void;
-}
-
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+import { ThemeContext } from './theme-context';
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { data: profile } = useQuery({
@@ -20,30 +13,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [previewTheme, setPreviewThemeState] = useState<DesignTheme | null>(null);
 
   const persistedTheme = resolveThemeName(profile?.theme);
-  const themeName = previewTheme ?? persistedTheme;
+  const activePreviewTheme = previewTheme && previewTheme !== persistedTheme ? previewTheme : null;
+  const themeName = activePreviewTheme ?? persistedTheme;
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeName;
   }, [themeName]);
-
-  useEffect(() => {
-    setPreviewThemeState(null);
-  }, [persistedTheme]);
 
   const setPreviewTheme = useCallback((theme: DesignTheme | null) => {
     setPreviewThemeState(theme ? resolveThemeName(theme) : null);
   }, []);
 
   const value = useMemo(
-    () => ({ themeName, previewTheme, setPreviewTheme }),
-    [themeName, previewTheme, setPreviewTheme],
+    () => ({ themeName, previewTheme: activePreviewTheme, setPreviewTheme }),
+    [themeName, activePreviewTheme, setPreviewTheme],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
-}
-
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error('useTheme must be used within ThemeProvider');
-  return context;
 }

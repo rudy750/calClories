@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { MealEntry } from '../../types';
 import { Trash2, Plus } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/useTheme';
 
 const SLOT_ORDER = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
 
@@ -53,8 +53,9 @@ export default function MealList({ meals, onDelete, onAddToSlot }: Props) {
               className="flex items-center justify-between px-4 py-3.5"
               style={{ background: slotBg, borderBottom: items.length > 0 ? '1px solid var(--app-border)' : 'none' }}
             >
-              <span className="text-sm font-bold">
-                {slotIcon} {meta.label}
+              <span className="flex items-center gap-2 text-sm font-bold">
+                <span aria-hidden="true">{slotIcon}</span>
+                <span>{meta.label}</span>
               </span>
               {total > 0 && (
                 <span className="app-chip rounded-full px-2.5 py-1 text-xs font-semibold">
@@ -94,13 +95,14 @@ export default function MealList({ meals, onDelete, onAddToSlot }: Props) {
             <button
               type="button"
               onClick={() => onAddToSlot(slot)}
+              aria-label="+ Add food"
               className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold transition-colors"
               style={{ color: 'var(--app-brand-strong)' }}
             >
               <span className="app-icon-pill flex h-5 w-5 items-center justify-center rounded-full">
                 <Plus size={12} />
               </span>
-              Add food
+              + Add food
             </button>
           </div>
         );

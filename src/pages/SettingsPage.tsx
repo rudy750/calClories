@@ -6,7 +6,7 @@ import type { UserProfile, ActivityLevel, GoalType, MacroPreset, Sex, UnitSystem
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fromDisplayHeight, fromDisplayPace, fromDisplayWeight, toDisplayHeight, toDisplayPace, toDisplayWeight } from '../utils/units';
 import { THEME_OPTIONS, resolveThemeName } from '../theme/themes';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/useTheme';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

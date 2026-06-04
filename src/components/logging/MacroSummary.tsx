@@ -1,4 +1,4 @@
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/useTheme';
 
 interface Props {
   calories: number;
@@ -99,9 +99,9 @@ export default function MacroSummary({
             className="mb-1 text-base font-bold"
             style={{ color: overBudget ? 'var(--app-danger)' : 'var(--app-brand-strong)' }}
           >
-            {overBudget ? `${Math.abs(remaining)} kcal over` : `${remaining} kcal left`}
+            {overBudget ? `${Math.abs(remaining)} over` : `${remaining} remaining`}
           </div>
-          <div className="mb-3 text-xs app-subtle">Goal · {targetCalories} kcal</div>
+          <div className="mb-3 text-xs app-subtle">Goal: {targetCalories} kcal</div>
           <div className="h-2 overflow-hidden rounded-full" style={{ background: 'var(--app-ring-track)' }}>
             <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: progressColor }} />
           </div>
