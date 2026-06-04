@@ -109,9 +109,9 @@ export default function MacroSummary({
       </div>
 
       <div className="mt-5 flex gap-4">
-        <MacroBar label="Protein" value={proteinG} target={targetProteinG} color="#60a5fa" />
-        <MacroBar label="Carbs" value={carbG} target={targetCarbG} color="#f59e0b" />
-        <MacroBar label="Fat" value={fatG} target={targetFatG} color={themeName === 'minimal-wellness' ? '#ec4899' : '#fb7185'} />
+        <MacroBar label="Protein" value={proteinG} target={targetProteinG} color="var(--app-macro-protein)" />
+        <MacroBar label="Carbs" value={carbG} target={targetCarbG} color="var(--app-macro-carbs)" />
+        <MacroBar label="Fat" value={fatG} target={targetFatG} color="var(--app-macro-fat)" />
       </div>
     </div>
   );

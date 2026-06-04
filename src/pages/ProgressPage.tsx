@@ -98,7 +98,7 @@ export default function ProgressPage() {
                 style={{
                   color:
                     Number(change) < 0
-                      ? '#10b981'
+                      ? 'var(--app-success)'
                       : Number(change) > 0
                         ? 'var(--app-danger)'
                         : 'var(--app-subtle)',

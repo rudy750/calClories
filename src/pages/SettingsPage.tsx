@@ -122,13 +122,13 @@ export default function SettingsPage() {
                         <span
                           className="h-4 w-4 rounded-full border"
                           style={{
-                            background: option.value === 'dark-fitness' ? '#080b14' : '#fdfaf5',
-                            borderColor: option.value === 'dark-fitness' ? '#1f2d50' : '#ede9fe',
+                            background: option.preview.surface,
+                            borderColor: option.preview.border,
                           }}
                         />
                         <span
                           className="h-4 w-4 rounded-full"
-                          style={{ background: option.value === 'dark-fitness' ? '#00d97e' : '#8b5cf6' }}
+                          style={{ background: option.preview.accent }}
                         />
                       </div>
                     </div>
@@ -275,7 +275,7 @@ export default function SettingsPage() {
           type="button"
           onClick={() => { if (confirm('Reset all data?')) { indexedDB.deleteDatabase('CaloriesDB'); location.reload(); } }}
           className="w-full rounded-[var(--app-control-radius)] border py-3 text-sm font-medium"
-          style={{ borderColor: 'rgba(244, 63, 94, 0.25)', color: 'var(--app-danger)' }}
+          style={{ borderColor: 'var(--app-danger-border)', color: 'var(--app-danger)' }}
         >
           Reset all data
         </button>

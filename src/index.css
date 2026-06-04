@@ -28,7 +28,15 @@
     --app-tooltip-bg: #141d30;
     --app-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
     --app-danger: #ff6b87;
+    --app-danger-border: rgba(255, 107, 135, 0.28);
     --app-success: #00d97e;
+    --app-macro-protein: #60a5fa;
+    --app-macro-carbs: #f59e0b;
+    --app-macro-fat: #fb7185;
+    --app-slot-breakfast-bg: rgba(0, 217, 126, 0.12);
+    --app-slot-lunch-bg: rgba(34, 197, 94, 0.12);
+    --app-slot-dinner-bg: rgba(96, 165, 250, 0.12);
+    --app-slot-snack-bg: rgba(251, 113, 133, 0.12);
     --app-card-radius: 1.5rem;
     --app-control-radius: 1rem;
   }
@@ -58,7 +66,15 @@
     --app-tooltip-bg: #ffffff;
     --app-tooltip-shadow: 0 10px 26px rgba(124, 58, 237, 0.14);
     --app-danger: #f43f5e;
+    --app-danger-border: rgba(244, 63, 94, 0.24);
     --app-success: #7c3aed;
+    --app-macro-protein: #6366f1;
+    --app-macro-carbs: #f59e0b;
+    --app-macro-fat: #ec4899;
+    --app-slot-breakfast-bg: #fdf2f8;
+    --app-slot-lunch-bg: #f0fdf4;
+    --app-slot-dinner-bg: #eff6ff;
+    --app-slot-snack-bg: #fdf2f8;
     --app-card-radius: 1.75rem;
     --app-control-radius: 1.15rem;
   }

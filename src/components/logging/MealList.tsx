@@ -11,14 +11,13 @@ const SLOT_META: Record<
     label: string;
     darkIcon: string;
     minimalIcon: string;
-    darkBg: string;
-    minimalBg: string;
+    backgroundVar: string;
   }
 > = {
-  breakfast: { label: 'Breakfast', darkIcon: '🌅', minimalIcon: '🌸', darkBg: 'rgba(0, 217, 126, 0.12)', minimalBg: '#fdf2f8' },
-  lunch: { label: 'Lunch', darkIcon: '☀️', minimalIcon: '🌿', darkBg: 'rgba(34, 197, 94, 0.12)', minimalBg: '#f0fdf4' },
-  dinner: { label: 'Dinner', darkIcon: '🌙', minimalIcon: '🫐', darkBg: 'rgba(96, 165, 250, 0.12)', minimalBg: '#eff6ff' },
-  snack: { label: 'Snacks', darkIcon: '⚡', minimalIcon: '✨', darkBg: 'rgba(251, 113, 133, 0.12)', minimalBg: '#fdf2f8' },
+  breakfast: { label: 'Breakfast', darkIcon: '🌅', minimalIcon: '🌸', backgroundVar: 'var(--app-slot-breakfast-bg)' },
+  lunch: { label: 'Lunch', darkIcon: '☀️', minimalIcon: '🌿', backgroundVar: 'var(--app-slot-lunch-bg)' },
+  dinner: { label: 'Dinner', darkIcon: '🌙', minimalIcon: '🫐', backgroundVar: 'var(--app-slot-dinner-bg)' },
+  snack: { label: 'Snacks', darkIcon: '⚡', minimalIcon: '✨', backgroundVar: 'var(--app-slot-snack-bg)' },
 };
 
 interface Props {
@@ -44,14 +43,13 @@ export default function MealList({ meals, onDelete, onAddToSlot }: Props) {
         const items = grouped.get(slot) ?? [];
         const total = items.reduce((s, m) => s + m.calories, 0);
         const meta = SLOT_META[slot];
-        const slotBg = themeName === 'minimal-wellness' ? meta.minimalBg : meta.darkBg;
         const slotIcon = themeName === 'minimal-wellness' ? meta.minimalIcon : meta.darkIcon;
 
         return (
           <div key={slot} className="app-card overflow-hidden">
             <div
               className="flex items-center justify-between px-4 py-3.5"
-              style={{ background: slotBg, borderBottom: items.length > 0 ? '1px solid var(--app-border)' : 'none' }}
+              style={{ background: meta.backgroundVar, borderBottom: items.length > 0 ? '1px solid var(--app-border)' : 'none' }}
             >
               <span className="flex items-center gap-2 text-sm font-bold">
                 <span aria-hidden="true">{slotIcon}</span>
