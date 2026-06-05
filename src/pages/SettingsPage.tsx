@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppShell from '../components/layout/AppShell';
 import { getProfile, saveProfile, saveTarget } from '../db/database';
 import { buildInitialTarget } from '../domain/macroEngine';
-import type { UserProfile, ActivityLevel, GoalType, MacroPreset, Sex, UnitSystem } from '../types';
+import type { UserProfile, ActivityLevel, GoalType, MacroPreset, Sex, UnitSystem, DesignTheme } from '../types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fromDisplayHeight, fromDisplayPace, fromDisplayWeight, toDisplayHeight, toDisplayPace, toDisplayWeight } from '../utils/units';
+import { THEME_OPTIONS, resolveThemeName } from '../theme/themes';
+import { useTheme } from '../context/useTheme';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{label}</label>
+      <label className="app-subtle mb-1.5 block text-xs font-bold uppercase tracking-wide">{label}</label>
       {children}
     </div>
   );
@@ -25,7 +27,7 @@ function TextInput({ value, onChange, type = 'text', placeholder }: {
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+      className="app-input w-full px-4 py-3 text-base"
     />
   );
 }
@@ -38,7 +40,7 @@ function SelectInput({ value, onChange, options }: {
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-brand-500"
+      className="app-input w-full px-4 py-3 text-base"
     >
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
@@ -47,13 +49,18 @@ function SelectInput({ value, onChange, options }: {
 
 export default function SettingsPage() {
   const qc = useQueryClient();
-
+  const { setPreviewTheme } = useTheme();
   const { data: profile } = useQuery({ queryKey: ['profile'], queryFn: getProfile });
   const [saved, setSaved] = useState(false);
   const [formOverrides, setFormOverrides] = useState<Partial<UserProfile>>({});
-  const form: Partial<UserProfile> = profile ? { ...profile, ...formOverrides } : formOverrides;
 
+  const form: Partial<UserProfile> = profile ? { ...profile, ...formOverrides } : formOverrides;
   const unitSystem = (form.unitSystem ?? profile?.unitSystem ?? 'metric') as UnitSystem;
+  const selectedTheme = resolveThemeName(form.theme ?? profile?.theme);
+
+  useEffect(() => {
+    return () => setPreviewTheme(null);
+  }, [setPreviewTheme]);
 
   function set<K extends keyof UserProfile>(key: K, value: UserProfile[K]) {
     setFormOverrides(f => ({ ...f, [key]: value }));
@@ -66,6 +73,7 @@ export default function SettingsPage() {
       ...profile,
       ...form,
       unitSystem,
+      theme: selectedTheme,
       updatedAt: new Date().toISOString(),
     };
     await saveProfile(updated);
@@ -77,30 +85,69 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2000);
   }
 
+  function handleThemeSelect(theme: DesignTheme) {
+    set('theme', theme);
+    setPreviewTheme(theme);
+  }
+
   if (!profile) {
     return (
       <AppShell title="Settings">
-        <div className="text-center mt-12 text-gray-400 text-sm">No profile found.</div>
+        <div className="app-muted mt-12 text-center text-sm">No profile found.</div>
       </AppShell>
     );
   }
 
   return (
     <AppShell title="Settings">
-      <div className="flex flex-col gap-5 mt-4 pb-6">
+      <div className="mt-4 flex flex-col gap-5 pb-6">
+        <Section title="Design">
+          <Field label="App style">
+            <div className="grid gap-3">
+              {THEME_OPTIONS.map(option => {
+                const active = selectedTheme === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => handleThemeSelect(option.value)}
+                    className={`app-option w-full px-4 py-3 text-left ${active ? 'app-option-active' : ''}`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-bold">{option.label}</div>
+                        <div className="app-subtle mt-1 text-xs">{option.description}</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <span
+                          className="h-4 w-4 rounded-full border"
+                          style={{
+                            background: option.preview.surface,
+                            borderColor: option.preview.border,
+                          }}
+                        />
+                        <span
+                          className="h-4 w-4 rounded-full"
+                          style={{ background: option.preview.accent }}
+                        />
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+        </Section>
+
         <Section title="Display units">
           <Field label="Measurement system">
-            <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-gray-50 p-1">
+            <div className="app-segment grid grid-cols-2 gap-2 p-1">
               {(['metric', 'imperial'] as UnitSystem[]).map(system => (
                 <button
                   key={system}
                   type="button"
                   onClick={() => set('unitSystem', system)}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
-                    unitSystem === system
-                      ? 'bg-brand-600 text-white shadow-sm'
-                      : 'text-gray-600 hover:bg-white'
-                  }`}
+                  className={`app-segment-option px-3 py-2.5 text-sm font-bold ${unitSystem === system ? 'app-segment-option-active' : ''}`}
                 >
                   {system === 'metric' ? 'Metric' : 'Imperial'}
                 </button>
@@ -109,7 +156,6 @@ export default function SettingsPage() {
           </Field>
         </Section>
 
-        {/* Personal */}
         <Section title="Personal">
           <Field label="Name">
             <TextInput value={String(form.name ?? '')} onChange={v => set('name', v)} />
@@ -140,7 +186,6 @@ export default function SettingsPage() {
           </Field>
         </Section>
 
-        {/* Activity */}
         <Section title="Activity & Goal">
           <Field label="Activity level">
             <SelectInput
@@ -195,7 +240,6 @@ export default function SettingsPage() {
           )}
         </Section>
 
-        {/* Macros */}
         <Section title="Macro split">
           <Field label="Preset">
             <SelectInput
@@ -210,9 +254,8 @@ export default function SettingsPage() {
           </Field>
         </Section>
 
-        {/* API key */}
         <Section title="USDA API key (optional)">
-          <p className="text-xs text-gray-400 -mt-1 mb-2">Improves fallback search. Get a free key at fdc.nal.usda.gov.</p>
+          <p className="app-subtle -mt-1 mb-2 text-xs">Improves fallback search. Get a free key at fdc.nal.usda.gov.</p>
           <TextInput
             value={localStorage.getItem('usda_api_key') ?? ''}
             onChange={v => { if (v) localStorage.setItem('usda_api_key', v); else localStorage.removeItem('usda_api_key'); }}
@@ -223,7 +266,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3.5 rounded-xl bg-brand-600 text-white font-semibold text-base"
+          className="app-primary-button w-full rounded-[var(--app-control-radius)] py-3.5 text-base font-semibold"
         >
           {saved ? '✓ Saved!' : 'Save changes'}
         </button>
@@ -231,7 +274,8 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={() => { if (confirm('Reset all data?')) { indexedDB.deleteDatabase('CaloriesDB'); location.reload(); } }}
-          className="w-full py-3 rounded-xl border border-red-200 text-red-500 text-sm font-medium"
+          className="w-full rounded-[var(--app-control-radius)] border py-3 text-sm font-medium"
+          style={{ borderColor: 'var(--app-danger-border)', color: 'var(--app-danger)' }}
         >
           Reset all data
         </button>
@@ -242,8 +286,8 @@ export default function SettingsPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-      <h3 className="font-semibold text-gray-800 mb-4">{title}</h3>
+    <div className="app-card p-4">
+      <h3 className="mb-4 font-semibold">{title}</h3>
       <div className="flex flex-col gap-3">{children}</div>
     </div>
   );

@@ -1,13 +1,23 @@
 import { useMemo } from 'react';
 import type { MealEntry } from '../../types';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Plus } from 'lucide-react';
+import { useTheme } from '../../context/useTheme';
 
 const SLOT_ORDER = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
-const SLOT_LABELS: Record<string, string> = {
-  breakfast: 'Breakfast',
-  lunch: 'Lunch',
-  dinner: 'Dinner',
-  snack: 'Snacks',
+
+const SLOT_META: Record<
+  MealEntry['mealSlot'],
+  {
+    label: string;
+    darkIcon: string;
+    minimalIcon: string;
+    backgroundVar: string;
+  }
+> = {
+  breakfast: { label: 'Breakfast', darkIcon: '🌅', minimalIcon: '🌸', backgroundVar: 'var(--app-slot-breakfast-bg)' },
+  lunch: { label: 'Lunch', darkIcon: '☀️', minimalIcon: '🌿', backgroundVar: 'var(--app-slot-lunch-bg)' },
+  dinner: { label: 'Dinner', darkIcon: '🌙', minimalIcon: '🫐', backgroundVar: 'var(--app-slot-dinner-bg)' },
+  snack: { label: 'Snacks', darkIcon: '⚡', minimalIcon: '✨', backgroundVar: 'var(--app-slot-snack-bg)' },
 };
 
 interface Props {
@@ -17,6 +27,7 @@ interface Props {
 }
 
 export default function MealList({ meals, onDelete, onAddToSlot }: Props) {
+  const { themeName } = useTheme();
   const grouped = useMemo(() => {
     const map = new Map<string, MealEntry[]>();
     for (const slot of SLOT_ORDER) map.set(slot, []);
@@ -27,41 +38,67 @@ export default function MealList({ meals, onDelete, onAddToSlot }: Props) {
   }, [meals]);
 
   return (
-    <div className="flex flex-col gap-4 mt-2">
+    <div className="mt-2 flex flex-col gap-4">
       {SLOT_ORDER.map(slot => {
         const items = grouped.get(slot) ?? [];
         const total = items.reduce((s, m) => s + m.calories, 0);
+        const meta = SLOT_META[slot];
+        const slotIcon = themeName === 'minimal-wellness' ? meta.minimalIcon : meta.darkIcon;
+
         return (
-          <div key={slot} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-              <span className="font-semibold text-gray-800">{SLOT_LABELS[slot]}</span>
-              <span className="text-sm text-gray-400">{total > 0 ? `${total} kcal` : ''}</span>
+          <div key={slot} className="app-card overflow-hidden">
+            <div
+              className="flex items-center justify-between px-4 py-3.5"
+              style={{ background: meta.backgroundVar, borderBottom: items.length > 0 ? '1px solid var(--app-border)' : 'none' }}
+            >
+              <span className="flex items-center gap-2 text-sm font-bold">
+                <span aria-hidden="true">{slotIcon}</span>
+                <span>{meta.label}</span>
+              </span>
+              {total > 0 && (
+                <span className="app-chip rounded-full px-2.5 py-1 text-xs font-semibold">
+                  {total} kcal
+                </span>
+              )}
             </div>
+
             {items.map(m => (
-              <div key={m.id} className="flex items-center justify-between px-4 py-2.5 border-b border-gray-50 last:border-0">
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-800 truncate">{m.foodName}</div>
-                  <div className="text-xs text-gray-400">
+              <div
+                key={m.id}
+                className="flex items-center justify-between px-4 py-3"
+                style={{ borderBottom: '1px solid var(--app-border)' }}
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-semibold">{m.foodName}</div>
+                  <div className="app-subtle mt-0.5 text-xs">
                     {m.amountG}g · P {m.proteinG.toFixed(0)}g · C {m.carbG.toFixed(0)}g · F {m.fatG.toFixed(0)}g
                   </div>
                 </div>
-                <div className="flex items-center gap-3 ml-2">
-                  <span className="text-sm font-semibold text-gray-700">{m.calories} kcal</span>
+                <div className="ml-2 flex items-center gap-3">
+                  <span className="text-sm font-bold" style={{ color: 'var(--app-brand-strong)' }}>
+                    {m.calories} kcal
+                  </span>
                   <button
                     type="button"
                     onClick={() => m.id != null && onDelete(m.id)}
-                    className="text-gray-300 hover:text-red-400 transition-colors p-1"
+                    className="rounded-xl p-1.5 transition-colors"
+                    style={{ color: 'var(--app-subtle)' }}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
             ))}
+
             <button
               type="button"
               onClick={() => onAddToSlot(slot)}
-              className="w-full px-4 py-2.5 text-sm text-brand-600 font-medium text-left hover:bg-gray-50 transition-colors"
+              className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold transition-colors"
+              style={{ color: 'var(--app-brand-strong)' }}
             >
+              <span className="app-icon-pill flex h-5 w-5 items-center justify-center rounded-full">
+                <Plus size={12} />
+              </span>
               + Add food
             </button>
           </div>

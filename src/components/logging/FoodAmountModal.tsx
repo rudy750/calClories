@@ -44,30 +44,30 @@ export default function FoodAmountModal({ food, slot, onSave, onBack, onClose }:
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-white">
-      <div className="flex items-center gap-2 px-4 pt-4 pb-3 border-b border-gray-100">
-        <button type="button" onClick={onBack} className="text-gray-400 p-1"><ArrowLeft size={22} /></button>
+    <div className="app-screen fixed inset-0 z-50 flex flex-col">
+      <div className="flex items-center gap-2 px-4 pt-4 pb-3" style={{ borderBottom: '1px solid var(--app-border)' }}>
+        <button type="button" onClick={onBack} className="app-subtle p-1"><ArrowLeft size={22} /></button>
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-gray-900 truncate">{food.name}</div>
-          {food.brand && <div className="text-xs text-gray-400 truncate">{food.brand}</div>}
+          <div className="truncate font-semibold">{food.name}</div>
+          {food.brand && <div className="app-subtle truncate text-xs">{food.brand}</div>}
         </div>
-        <button type="button" onClick={onClose} className="text-gray-400 p-1"><X size={22} /></button>
+        <button type="button" onClick={onClose} className="app-subtle p-1"><X size={22} /></button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-5">
         {/* Amount input */}
         <div>
-          <label className="block text-sm font-medium text-gray-600 mb-2">Amount</label>
+          <label className="app-muted mb-2 block text-sm font-semibold">Amount</label>
           <div className="flex items-center gap-2">
             <input
               type="number"
               inputMode="decimal"
               value={amountG}
               onChange={e => setAmountG(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="app-input flex-1 px-4 py-3 text-xl font-semibold"
               autoFocus
             />
-            <span className="text-gray-500 font-medium">g</span>
+            <span className="app-subtle font-medium">g</span>
           </div>
           <div className="flex gap-2 mt-2">
             {PRESETS.map(p => (
@@ -75,11 +75,7 @@ export default function FoodAmountModal({ food, slot, onSave, onBack, onClose }:
                 key={p.value}
                 type="button"
                 onClick={() => setAmountG(String(p.value))}
-                className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                  Number(amountG) === p.value
-                    ? 'border-brand-500 bg-brand-50 text-brand-700'
-                    : 'border-gray-200 text-gray-600'
-                }`}
+                className={`app-option flex-1 py-2 text-sm font-medium ${Number(amountG) === p.value ? 'app-option-active' : ''}`}
               >
                 {p.label}
               </button>
@@ -87,11 +83,7 @@ export default function FoodAmountModal({ food, slot, onSave, onBack, onClose }:
             <button
               type="button"
               onClick={() => setAmountG(String(food.servingSizeG || 100))}
-              className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                Number(amountG) === (food.servingSizeG || 100)
-                  ? 'border-brand-500 bg-brand-50 text-brand-700'
-                  : 'border-gray-200 text-gray-600'
-              }`}
+              className={`app-option flex-1 py-2 text-sm font-medium ${Number(amountG) === (food.servingSizeG || 100) ? 'app-option-active' : ''}`}
             >
               1 srv
             </button>
@@ -99,9 +91,9 @@ export default function FoodAmountModal({ food, slot, onSave, onBack, onClose }:
         </div>
 
         {/* Nutrition preview */}
-        <div className="bg-gray-50 rounded-2xl p-4">
-          <div className="text-3xl font-bold text-gray-900 mb-1">{cal} <span className="text-base font-normal text-gray-400">kcal</span></div>
-          <div className="flex gap-4 text-sm text-gray-600">
+        <div className="app-card-soft p-4">
+          <div className="mb-1 text-3xl font-bold">{cal} <span className="app-subtle text-base font-normal">kcal</span></div>
+          <div className="app-muted flex gap-4 text-sm">
             <span>P <strong>{pro}g</strong></span>
             <span>C <strong>{carb}g</strong></span>
             <span>F <strong>{fat}g</strong></span>
@@ -114,7 +106,7 @@ export default function FoodAmountModal({ food, slot, onSave, onBack, onClose }:
           type="button"
           onClick={handleSave}
           disabled={!amount}
-          className="w-full py-3.5 rounded-xl bg-brand-600 text-white font-semibold text-base disabled:opacity-40"
+          className="app-primary-button w-full rounded-[var(--app-control-radius)] py-3.5 text-base font-semibold disabled:opacity-40"
         >
           Add to {slot}
         </button>

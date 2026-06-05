@@ -1,5 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import type { UserProfile, FoodItem, MealEntry, WeighIn, CalorieTarget } from '../types';
+import { resolveThemeName } from '../theme/themes';
 
 class CaloriesDB extends Dexie {
   profile!: Table<UserProfile>;
@@ -23,11 +24,13 @@ class CaloriesDB extends Dexie {
 export const db = new CaloriesDB();
 
 export async function getProfile(): Promise<UserProfile | undefined> {
-  return db.profile.get(1);
+  const profile = await db.profile.get(1);
+  if (!profile) return undefined;
+  return { ...profile, theme: resolveThemeName(profile.theme) };
 }
 
 export async function saveProfile(profile: Omit<UserProfile, 'id'>): Promise<void> {
-  await db.profile.put({ ...profile, id: 1 });
+  await db.profile.put({ ...profile, theme: resolveThemeName(profile.theme), id: 1 });
 }
 
 export async function getLatestTarget(): Promise<(CalorieTarget & { id?: number }) | undefined> {

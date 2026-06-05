@@ -3,6 +3,7 @@ export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'very_active' |
 export type GoalType = 'lose' | 'maintain' | 'gain';
 export type MacroPreset = 'balanced' | 'high_protein' | 'low_carb' | 'custom';
 export type UnitSystem = 'metric' | 'imperial';
+export type DesignTheme = 'dark-fitness' | 'minimal-wellness';
 
 export interface UserProfile {
   id: 1; // singleton
@@ -19,6 +20,7 @@ export interface UserProfile {
   customProteinPct?: number;
   customCarbPct?: number;
   customFatPct?: number;
+  theme?: DesignTheme;
   onboardingComplete: boolean;
   createdAt: string; // ISO date
   updatedAt: string;

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getProfile } from './db/database';
+import { ThemeProvider } from './context/ThemeContext';
 import OnboardingPage from './pages/OnboardingPage';
 import TodayPage from './pages/TodayPage';
 import ProgressPage from './pages/ProgressPage';
@@ -26,8 +27,11 @@ function AppRoutes() {
 
   if (!ready) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="w-8 h-8 rounded-full border-4 border-brand-500 border-t-transparent animate-spin" />
+      <div className="app-screen flex items-center justify-center min-h-screen">
+        <div
+          className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin"
+          style={{ borderColor: 'var(--app-brand)', borderTopColor: 'transparent' }}
+        />
       </div>
     );
   }
@@ -46,9 +50,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <HashRouter>
-        <AppRoutes />
-      </HashRouter>
+      <ThemeProvider>
+        <HashRouter>
+          <AppRoutes />
+        </HashRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
