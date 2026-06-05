@@ -32,7 +32,7 @@ export default function QuickAddModal({ slot, onSave, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40">
-      <div className="app-card w-full max-w-lg rounded-t-3xl p-6 pb-8 sm:rounded-2xl">
+      <div className="app-card w-full max-w-lg !rounded-b-none !rounded-t-3xl p-6 pb-8 sm:!rounded-2xl">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <div className="app-icon-pill flex h-8 w-8 items-center justify-center">

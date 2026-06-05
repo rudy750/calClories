@@ -29,7 +29,7 @@ function NavItem({
   return (
     <NavLink
       to={to}
-      className={({ isActive }) => `${base} ${isActive ? '' : 'app-subtle'}`}
+      className={base}
       style={({ isActive }) => ({ color: isActive ? 'var(--app-brand-strong)' : 'var(--app-subtle)' })}
     >
       {({ isActive }) => (
